@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # PostgreSQL with PostGIS
+  postgres:
+    # image: postgis/postgis:17-3.4
+    build : .
+    container_name: workshop-postgres
+    environment:
+      POSTGRES_DB: workshop
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - workshop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgREST API Server
+  postgrest:
+    image: postgrest/postgrest:latest
+    container_name: workshop-postgrest
+    environment:
+      PGRST_DB_URI: postgresql://postgres:postgres@postgres:5432/workshop # Representing Database URI 
+      PGRST_DB_SCHEMAS: public,auth # Schemas that PostgREST should look at
+      PGRST_DB_ANON_ROLE: web_anon # Anonymous role to access read data
+      # PGRST_JWT_SECRET: your-super-secret-jwt-key-at-least-32-characters-long # JWT secret key for authentication
+      PGRST_SERVER_PORT: 3000 # Server Port on which app should run
+      PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000 # URI for Open API Spec
+      PGRST_JWT_SECRET: "your-super-secret-jwt-key-at-least-32-characters-long"
+      PGRST_JWT_AUD: "postgrest"
+      PGRST_ROLE_CLAIM_KEY: ".role"
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - workshop-network
+    restart: unless-stopped
+
+  # pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: workshop-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: postgres@admin.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    networks:
+      - workshop-network
+    restart: unless-stopped
+
+  # Swagger UI for API documentation
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    container_name: workshop-swagger
+    environment:
+      API_URL: http://localhost:3000/
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgrest
+    networks:
+      - workshop-network
+    restart: unless-stopped
+
+  # MkDocs documentation server
+  mkdocs:
+    image: squidfunk/mkdocs-material:latest
+    container_name: workshop-docs
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/docs
+    networks:
+      - workshop-network
+    command: serve --dev-addr=0.0.0.0:8000
+    restart: unless-stopped
+
+networks:
+  workshop-network:
+    driver: bridge

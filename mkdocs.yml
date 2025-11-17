@@ -1,0 +1,59 @@
+site_name: PostgREST Workshop
+site_description: A comprehensive workshop on PostgREST and PostGIS
+site_author: Workshop Team
+site_url: https://krishnaglodha.github.io/postgrest-ws.rottengrapes.tech
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js
+
+nav:
+  - Home: index.md
+  - Introduction to PostgreSQL: postgresql-intro.md
+  - Introduction to PostGIS: postgis-intro.md
+  - Setting up PostgREST: postgrest-setup.md
+  - Advanced Authentication: postgrest-auth.md
+  - Using Functions: postgrest-functions.md
+  - GIS with PostgREST: postgrest-gis.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  
+
+plugins:
+  - search
