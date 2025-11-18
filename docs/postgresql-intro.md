@@ -794,6 +794,7 @@ WHERE id IN (
 ### Exercise 1: Basic Table Operations
 
 Create a table called `instructors` with the following requirements:
+
 - `id` (auto-incrementing primary key)
 - `name` (required, max 100 characters)
 - `email` (unique, required)
@@ -809,12 +810,14 @@ Create a table called `instructors` with the following requirements:
 ### Exercise 2: JSONB Practice
 
 Create a table `workshop_feedback` with columns:
+
 - `id` (primary key)
 - `workshop_id` (references workshops)
 - `participant_email` (varchar)
 - `feedback` (JSONB containing rating, comments, suggestions)
 
 Insert sample feedback and write queries to:
+
 1. Find all feedback with rating > 4
 2. Get average rating per workshop
 3. Find workshops mentioned in suggestions
@@ -839,6 +842,7 @@ Write a function `get_instructor_workload(instructor_name VARCHAR)` that returns
 ### Exercise 4: Views and Analytics
 
 Create a materialized view `monthly_workshop_stats` that shows:
+
 - Month/year
 - Number of workshops
 - Total participants
@@ -852,6 +856,7 @@ Create a materialized view `monthly_workshop_stats` that shows:
 ### Exercise 5: ACID Transaction
 
 Write a transaction that:
+
 1. Creates a new workshop
 2. Assigns an instructor
 3. Registers 3 participants

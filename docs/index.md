@@ -53,13 +53,13 @@ These scripts automatically set up:
 
 1. **Clone this repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech
    cd postgrest-ws.rottengrapes.tech
    ```
 
 2. **Start all services**:
    ```bash
-   docker-compose up -d
+   docker-compose up --build
    ```
 
 3. **Verify services are running**:
