@@ -9,7 +9,7 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://postgrest:3000/rpc/login', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/rpc/login`, {
         email,
         password
       });

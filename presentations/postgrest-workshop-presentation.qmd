@@ -1,0 +1,499 @@
+---
+title: "PostgREST with PostGIS"
+subtitle: "Building REST APIs with PostGIS"
+author: "Krishna Lodha"
+format:
+  revealjs:
+    slide-number: true
+    chalkboard: true
+    preview-links: auto
+    logo: assets/logo_sq.png
+    footer: "Rotten Grapes Pvt ltd.  - rottengrapes.tech"
+    transition: slide
+    background-transition: fade
+---
+
+## Using! {.center}
+
+::: {.r-fit-text}
+**PostgREST with PostGIS**
+:::
+
+Building powerful REST APIs directly from PostgreSQL
+
+---
+
+## What We'll Cover {.smaller}
+
+::: {.incremental}
+- **PostgreSQL + PostGIS** - Spatial database fundamentals
+- **PostgREST Setup** - Auto-generate REST APIs
+- **Authentication** - JWT-based security
+- **Custom Functions** - Business logic as API endpoints
+- **Spatial APIs** - Location-aware applications
+- **Hands-on Demo** - Complete Docker environment
+:::
+
+
+---
+
+## Why PostgREST? {.center}
+
+::: {.r-fit-text}
+**Zero Code APIs**
+:::
+
+Turn your database schema into a REST API automatically
+
+---
+
+## Traditional API Development
+
+```{mermaid}
+graph LR
+    A[Database] --> B[Backend Code]
+    B --> C[API Routes]
+    C --> D[Authentication]
+    D --> E[Validation]
+    E --> F[Documentation]
+    F --> G[Client]
+```
+
+::: {.fragment}
+**Problems:** Boilerplate code, maintenance overhead, schema sync issues
+:::
+
+---
+
+## PostgREST Approach
+
+```{mermaid}
+graph LR
+    A[PostgreSQL Schema] --> B[PostgREST]
+    B --> C[REST API]
+    C --> D[Client]
+```
+
+::: {.fragment}
+**Benefits:** Auto-generated, always in sync, minimal configuration
+:::
+
+---
+
+## Workshop Environment {.smaller}
+
+
+Code and document is live at : [https://postgrest-ws.rottengrapes.tech/](https://postgrest-ws.rottengrapes.tech/)
+
+```yaml
+services:
+  postgres:     # PostgreSQL + PostGIS
+  postgrest:    # REST API server
+  pgadmin:      # Database management
+  swagger-ui:   # API documentation
+  mkdocs:       # Workshop docs
+```
+
+::: {.fragment}
+**One command:** `docker-compose up --build`
+:::
+
+::: {.fragment}
+**Access points:**
+
+- Swagger API: http://localhost:3000
+- Docs: http://localhost:8000
+- pgAdmin: http://localhost:8080
+:::
+
+---
+
+## PostgreSQL Fundamentals {.center}
+
+::: {.r-fit-text}
+**Foundation First**
+:::
+
+---
+
+## PostgreSQL Power Features {.smaller}
+
+::: {.incremental}
+- **JSON/JSONB** - Native document storage
+- **Arrays** - Multi-value columns
+- **Custom Types** - Domain-specific data
+- **Functions** - Server-side logic
+- **Extensions** - PostGIS, pgcrypto, pgjwt
+- **Row Level Security** - Fine-grained permissions
+:::
+
+---
+
+## PostGIS Integration {.smaller}
+
+```sql
+-- Enable PostGIS
+CREATE EXTENSION postgis;
+
+-- Spatial data types
+CREATE TABLE locations (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    geom GEOMETRY(POINT, 4326)
+);
+
+-- Spatial queries
+SELECT name FROM locations 
+WHERE ST_DWithin(geom, ST_Point(-71.0589, 42.3601), 1000);
+```
+
+::: {.fragment}
+**Result:** Geographic APIs with zero additional code!
+:::
+
+---
+
+## PostgREST Setup {.center}
+
+::: {.r-fit-text}
+**API Magic**
+:::
+
+---
+
+## Database Schema → API {.smaller}
+
+```sql
+-- Create table
+CREATE TABLE workshops (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    duration INTEGER,
+    instructor VARCHAR(100)
+);
+
+-- Grant permissions
+GRANT SELECT ON workshops TO web_anon;
+```
+
+::: {.fragment}
+**Instantly available:**
+
+- `GET /workshops` - List all
+- `GET /workshops?id=eq.1` - Filter
+- `GET /workshops?select=title,duration` - Projection
+:::
+
+---
+
+## Query Parameters {.smaller}
+
+::: {.fragment}
+
+- **Filtering**
+  - /workshops?duration=gt.120
+  - /workshops?title=like.*PostgREST*
+  - /workshops?instructor=in.(John,Jane)
+
+- **Ordering**
+  - /workshops?order=duration.desc
+
+- **Pagination**
+  - /workshops?limit=10&offset=20
+
+- **Relationships**
+  - /workshops?select=*,participants(`*`)
+:::
+
+<!-- ---
+
+## Live Demo: Basic API {.center}
+
+::: {.r-fit-text}
+**Let's see it work!**
+::: -->
+
+---
+
+## Authentication & Security {.center}
+
+::: {.r-fit-text}
+**JWT + RLS**
+:::
+
+---
+
+## JWT Authentication Flow {.smaller}
+
+```sql
+-- Create roles
+CREATE ROLE authenticator LOGIN;
+CREATE ROLE web_anon NOLOGIN;
+CREATE ROLE workshop_user NOLOGIN;
+
+-- Login function
+CREATE FUNCTION login(email TEXT, password TEXT) 
+RETURNS JSON AS $$
+  -- Verify credentials and return JWT
+$$ LANGUAGE plpgsql;
+```
+
+::: {.fragment}
+**Usage:**
+```bash
+curl -X POST /rpc/login \
+  -d '{"email":"user@example.com","password":"secret"}'
+```
+:::
+
+
+::: {.fragment}
+**Setup login, hashing, signup code:**
+```bash
+check the code at - https://postgrest-ws.rottengrapes.tech/postgrest-auth/
+```
+:::
+
+---
+
+## Row Level Security {.smaller}
+
+```sql
+-- Enable RLS
+ALTER TABLE workshops ENABLE ROW LEVEL SECURITY;
+
+-- Create policy
+CREATE POLICY workshop_policy ON workshops
+  FOR ALL TO workshop_user
+  USING (instructor = current_setting('request.jwt.claims')::json->>'email');
+```
+
+::: {.fragment}
+**Result:** Users only see their own workshops automatically!
+:::
+
+---
+
+## Custom Functions {.center}
+
+::: {.r-fit-text}
+**Business Logic**
+:::
+
+---
+
+## PostgreSQL Functions → API Endpoints {.smaller}
+
+```sql
+-- Function becomes RPC endpoint
+CREATE FUNCTION search_workshops(query TEXT)
+RETURNS TABLE(id INT, title TEXT, relevance REAL) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT w.id, w.title, 
+         similarity(w.title, query) as relevance
+  FROM workshops w
+  WHERE w.title % query
+  ORDER BY relevance DESC;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+::: {.fragment}
+**API call:**
+```bash
+POST /rpc/search_workshops
+{"query": "PostgREST"}
+```
+:::
+
+---
+
+## Spatial Functions {.smaller}
+
+```sql
+CREATE FUNCTION nearby_locations(
+  lat FLOAT, 
+  lng FLOAT, 
+  radius_meters INT DEFAULT 1000
+)
+RETURNS TABLE(name TEXT, distance FLOAT) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT l.name, 
+         ST_Distance(l.geom, ST_Point(lng, lat)::geography) as distance
+  FROM locations l
+  WHERE ST_DWithin(l.geom, ST_Point(lng, lat)::geography, radius_meters)
+  ORDER BY distance;
+END;
+$$ LANGUAGE plpgsql;
+```
+
+---
+
+## Spatial APIs in Action {.center}
+
+::: {.r-fit-text}
+**Location Intelligence**
+:::
+
+---
+
+## Real-World Spatial Queries {.smaller}
+
+```bash
+# Find nearby workshops
+POST /rpc/nearby_locations
+{"lat": 42.3601, "lng": -71.0589, "radius_meters": 5000}
+
+# Get workshop locations as GeoJSON
+GET /locations?select=name,geom&geom=not.is.null
+
+# Find workshops within polygon
+POST /rpc/workshops_in_area
+{"boundary": "POLYGON((...))"} 
+```
+
+::: {.fragment}
+**Perfect for:** Maps, location services, delivery apps, IoT
+:::
+
+---
+
+## Advanced Features {.smaller}
+
+::: {.incremental}
+
+- **Real-time subscriptions** - WebSocket support
+- **File uploads** - Binary data handling
+- **Bulk operations** - Efficient batch processing
+- **Custom aggregations** - Complex analytics
+- **OpenAPI spec** - Auto-generated documentation
+- **Horizontal scaling** - Multiple PostgREST instances
+:::
+
+---
+
+## Performance & Scaling {.smaller}
+
+::: {.incremental}
+
+- **Database indexes** - Query optimization
+- **Connection pooling** - Resource management
+- **Caching strategies** - Redis integration
+- **Read replicas** - Load distribution
+- **CDN integration** - Global performance
+:::
+
+```sql
+-- Essential indexes
+CREATE INDEX idx_workshops_instructor ON workshops(instructor);
+CREATE INDEX idx_locations_geom ON locations USING GIST(geom);
+```
+
+---
+
+## Production Deployment {.smaller}
+
+```yaml
+# docker-compose.prod.yml
+services:
+  postgrest:
+    image: postgrest/postgrest
+    environment:
+      PGRST_DB_URI: ${DATABASE_URL}
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_POOL: 20
+    deploy:
+      replicas: 3
+```
+
+::: {.fragment}
+**Also consider:** Kubernetes, AWS ECS, Google Cloud Run
+:::
+
+
+---
+
+## Workshop Hands-On {.smaller}
+
+**Your turn to try:**
+
+1. **Start environment:** `docker-compose up -d`
+2. **Create tables** with spatial data
+3. **Test APIs** with curl/Postman
+4. **Add authentication** with JWT
+5. **Build custom functions** for business logic
+6. **Explore spatial queries** with PostGIS
+
+::: {.fragment}
+**Get complete Workshop and document at :** [https://postgrest-ws.rottengrapes.tech/](https://postgrest-ws.rottengrapes.tech/)
+:::
+
+---
+
+## Use Cases & Success Stories {.smaller}
+
+::: {.incremental}
+
+- **Rapid prototyping** - MVP in hours, not weeks
+- **Microservices** - Database-per-service pattern
+- **Mobile backends** - Instant APIs for apps
+- **IoT platforms** - Sensor data collection
+- **GIS applications** - Spatial data services
+- **Analytics dashboards** - Real-time data APIs
+:::
+
+---
+
+## When NOT to Use PostgREST {.smaller}
+
+::: {.incremental}
+
+- **File processing** - Heavy computational tasks
+- **Third-party integrations** - External API orchestration
+- **Custom protocols** - Non-HTTP requirements
+- **Legacy constraints** - Existing architecture limitations
+:::
+
+---
+
+## Best Practices {.smaller}
+
+::: {.incremental}
+
+- **Schema design first** - API follows structure
+- **Use views** for complex queries
+- **Implement RLS** for security
+- **Create indexes** for performance
+- **Version your schema** with migrations
+- **Monitor query performance** regularly
+- **Test with realistic data** volumes
+:::
+
+---
+
+## Resources & Next Steps {.smaller}
+
+**Documentation:**
+  
+- PostgREST: https://postgrest.org
+- PostGIS: https://postgis.net
+- PostgreSQL: https://postgresql.org
+
+**Continue learning:**
+
+- **Workshop repo:** https://postgrest-ws.rottengrapes.tech/
+- **Want to learn PostGIS from scratch ? :** https://krishnaglodha.com/courses/ultimate-postgis-course/
+
+---
+
+## Questions & Discussion {.center}
+
+::: {.r-fit-text}
+**Thank You!**
+:::
+
+Let's explore your specific use cases . 
+
+**Contact:** [krishna@rottengrapes.tech](mailto:krishna@rottengrapes.tech)

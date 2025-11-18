@@ -58,7 +58,7 @@ const MapComponent = ({ user, token }) => {
 
   const loadLocations = async () => {
     try {
-      const response = await axios.get('http://postgrest:3000/locations');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/locations`);
       const features = response.data.map(location => {
         const coords = location.location.coordinates;
         return new Feature({
@@ -79,7 +79,7 @@ const MapComponent = ({ user, token }) => {
 
     try {
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      await axios.post('http://postgrest:3000/locations', {
+      await axios.post(`${process.env.REACT_APP_API_URL}/locations`, {
         name: formData.name,
         description: formData.description,
         geometry: `POINT(${clickCoordinate[0]} ${clickCoordinate[1]})`
