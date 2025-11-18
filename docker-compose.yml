@@ -89,6 +89,16 @@ services:
     command: serve --dev-addr=0.0.0.0:8000
     restart: unless-stopped
 
+  # React Frontend
+  frontend:
+    build: ./frontend
+    container_name: workshop-frontend
+    ports:
+      - "3001:3000"
+    networks:
+      - workshop-network
+    restart: unless-stopped
+
 networks:
   workshop-network:
     driver: bridge

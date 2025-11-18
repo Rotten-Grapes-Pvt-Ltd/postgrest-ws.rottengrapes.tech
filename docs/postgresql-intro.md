@@ -788,3 +788,76 @@ WHERE id IN (
     WHERE participant_count >= 2
 );
 ```
+
+## Exercises
+
+### Exercise 1: Basic Table Operations
+
+Create a table called `instructors` with the following requirements:
+- `id` (auto-incrementing primary key)
+- `name` (required, max 100 characters)
+- `email` (unique, required)
+- `specialization` (one of: 'database', 'web', 'mobile', 'data-science')
+- `years_experience` (must be positive)
+- `hourly_rate` (decimal, must be >= 50)
+- `created_at` (timestamp, defaults to current time)
+
+```sql
+-- Your solution here
+```
+
+### Exercise 2: JSONB Practice
+
+Create a table `workshop_feedback` with columns:
+- `id` (primary key)
+- `workshop_id` (references workshops)
+- `participant_email` (varchar)
+- `feedback` (JSONB containing rating, comments, suggestions)
+
+Insert sample feedback and write queries to:
+1. Find all feedback with rating > 4
+2. Get average rating per workshop
+3. Find workshops mentioned in suggestions
+
+```sql
+-- Your solution here
+```
+
+### Exercise 3: Advanced Functions
+
+Write a function `get_instructor_workload(instructor_name VARCHAR)` that returns:
+
+- Total workshops taught
+- Total hours taught
+- Average workshop rating (from feedback)
+- Total revenue generated
+
+```sql
+-- Your solution here
+```
+
+### Exercise 4: Views and Analytics
+
+Create a materialized view `monthly_workshop_stats` that shows:
+- Month/year
+- Number of workshops
+- Total participants
+- Revenue
+- Most popular category
+
+```sql
+-- Your solution here
+```
+
+### Exercise 5: ACID Transaction
+
+Write a transaction that:
+1. Creates a new workshop
+2. Assigns an instructor
+3. Registers 3 participants
+4. Updates instructor's total workshops count
+5. Ensures all operations succeed or fail together
+
+```sql
+-- Your solution here
+```

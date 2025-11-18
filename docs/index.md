@@ -18,6 +18,12 @@ Welcome to the comprehensive PostgREST and PostGIS workshop! This hands-on works
 - Docker installed on your system
 - Basic command line knowledge
 
+
+!!! note "If you don't have Prerequisites full filled"
+
+      Consider taking our course on [Ultimate PostGIS training](https://krishnaglodha.com/courses/ultimate-postgis-course/) where we have covered everything from databases to deployments in 30 hours
+
+
 ## Workshop Environment Setup
 
 This workshop includes a complete Docker Compose setup with all required services. The `docker-compose.yml` file in this repository includes:

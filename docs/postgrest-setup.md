@@ -359,6 +359,68 @@ curl "http://localhost:3000/workshops?select=id,title"
 curl "http://localhost:3000/workshops?limit=20"
 ```
 
+## Exercises
+
+### Exercise 1: Basic API Operations
+Using the workshops table:
+1. Create a new workshop via POST request
+2. Update the workshop duration using PATCH
+3. Query workshops by instructor name
+4. Delete the workshop you created
+
+```bash
+# Your curl commands here
+```
+
+### Exercise 2: Advanced Filtering
+Write API calls to:
+1. Find workshops longer than 2 hours
+2. Get workshops created in the last 7 days
+3. Find workshops with "PostgREST" in the title
+4. Get workshops ordered by duration (shortest first)
+
+```bash
+# Your curl commands here
+```
+
+### Exercise 3: Relationships and Joins
+1. Get all workshops with their participant count
+2. Find participants registered for "PostgREST Basics"
+3. Get workshops that have more than 1 participant
+4. List participants with their workshop titles
+
+```bash
+# Your curl commands here
+```
+
+### Exercise 4: Create Custom Views
+Create database views and test them:
+1. `popular_workshops` - workshops with participant count > 2
+2. `instructor_stats` - instructor name with workshop count and total duration
+3. `recent_registrations` - participants registered in last 30 days
+
+```sql
+-- Your SQL here
+```
+
+```bash
+# Your API calls here
+```
+
+### Exercise 5: Performance Testing
+1. Create 1000 sample workshops using a script
+2. Test pagination with different page sizes
+3. Compare response times with and without column selection
+4. Create appropriate indexes and measure improvement
+
+```sql
+-- Your SQL here
+```
+
+```bash
+# Your test commands here
+```
+
 ## Next Steps
 
 Now that you have PostgREST running with basic functionality, let's explore advanced authentication with JWT tokens in the next section.

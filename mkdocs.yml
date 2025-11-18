@@ -6,6 +6,8 @@ repo_url: https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tec
 
 theme:
   name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
   palette:
     - scheme: default
       primary: blue
@@ -37,6 +39,7 @@ nav:
   - Advanced Authentication: postgrest-auth.md
   - Using Functions: postgrest-functions.md
   - GIS with PostgREST: postgrest-gis.md
+  - Solution for Exercises : exercise-solutions.md
 
 markdown_extensions:
   - pymdownx.highlight:

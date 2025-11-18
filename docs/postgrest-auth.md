@@ -463,6 +463,62 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 6. **Regular Security Audits** - Review permissions and policies
 7. **Monitor Authentication** - Log and alert on suspicious activity
 
+## Exercises
+
+### Exercise 1: User Registration and Login
+1. Create the complete authentication schema and functions
+2. Register a new user with email and password
+3. Login with the created user and get JWT token
+4. Test token validation by accessing protected endpoints
+
+```sql
+-- Your authentication setup here
+```
+
+```bash
+# Your API calls here
+```
+
+### Exercise 2: Role-Based Access Control
+1. Create different user roles (admin, editor, viewer)
+2. Set up RLS policies for workshops table
+3. Test access control with different user roles
+4. Implement owner-based permissions
+
+```sql
+-- Your RLS policies here
+```
+
+### Exercise 3: JWT Token Management
+1. Create a function to refresh JWT tokens
+2. Implement token expiration handling
+3. Add user profile management endpoints
+4. Create password reset functionality
+
+```sql
+-- Your functions here
+```
+
+### Exercise 4: Advanced Authentication
+1. Implement session management with database storage
+2. Add user activity logging
+3. Create user preference storage
+4. Implement account activation via email
+
+```sql
+-- Your advanced auth features here
+```
+
+### Exercise 5: Security Testing
+1. Test SQL injection protection
+2. Verify RLS policy enforcement
+3. Test JWT token tampering protection
+4. Implement rate limiting for auth endpoints
+
+```bash
+# Your security tests here
+```
+
 ## Next Steps
 
 With authentication properly configured, let's explore how to use PostgreSQL functions with PostgREST for more complex business logic.

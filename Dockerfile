@@ -1,4 +1,4 @@
-FROM postgres:17
+FROM postgis/postgis:17-3.4
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \

@@ -861,3 +861,67 @@ FROM locations;
 4. **Transform once, use many** - Cache transformed geometries when possible
 5. **Validate geometries** - Use ST_IsValid() and fix issues early
 6. **Simplify when appropriate** - Use ST_Simplify for display/analysis
+
+## Exercises
+
+### Exercise 1: Basic Spatial Data Creation
+Create a table `restaurants` with spatial data:
+- Include name, cuisine_type, rating, and location (POINT)
+- Insert 5 restaurants in the Boston area with real coordinates
+- Create appropriate spatial index
+
+```sql
+-- Your solution here
+```
+
+### Exercise 2: Distance and Proximity Analysis
+Using the locations table:
+1. Find all museums within 2km of Harvard University
+2. Calculate the walking distance between all educational institutions
+3. Find the closest restaurant to each university (from Exercise 1)
+
+```sql
+-- Your solution here
+```
+
+### Exercise 3: Spatial Relationships
+Create a `neighborhoods` table with polygon boundaries:
+1. Define 3 Boston neighborhoods as polygons
+2. Find which locations fall within each neighborhood
+3. Calculate the density of locations per neighborhood
+
+```sql
+-- Your solution here
+```
+
+### Exercise 4: Buffer Analysis
+Perform service area analysis:
+1. Create 500m and 1km buffers around all subway stations
+2. Find locations within walking distance of public transit
+3. Identify underserved areas (areas with no locations within 1km)
+
+```sql
+-- Your solution here
+```
+
+### Exercise 5: Route Analysis
+Create a delivery route optimization:
+1. Create a `delivery_points` table with 10 locations
+2. Find the shortest path connecting all points (simplified)
+3. Calculate total distance and estimated delivery time
+4. Create a function that finds optimal delivery sequence
+
+```sql
+-- Your solution here
+```
+
+### Exercise 6: Spatial Aggregation
+Build a spatial dashboard:
+1. Create a view showing location statistics by category and region
+2. Calculate coverage areas for each category using convex hulls
+3. Find the geographic center of each category
+4. Create a materialized view for performance
+
+```sql
+-- Your solution here
+```

@@ -477,6 +477,62 @@ curl -X POST "http://localhost:3000/rpc/search_workshops" \
 7. **Test thoroughly** - Unit and integration tests
 8. **Consider performance** - Use indexes and optimize queries
 
+## Exercises
+
+### Exercise 1: Basic Function Creation
+1. Create a function `get_workshop_summary()` that returns total workshops, participants, and average rating
+2. Create a function `find_workshops_by_keyword(keyword TEXT)` for searching
+3. Test both functions via PostgREST API
+
+```sql
+-- Your functions here
+```
+
+```bash
+# Your API tests here
+```
+
+### Exercise 2: Table-Returning Functions
+1. Create `get_popular_workshops(min_participants INTEGER)` returning workshops with participant counts
+2. Create `get_instructor_schedule(instructor_name TEXT)` showing all workshops for an instructor
+3. Add proper error handling and validation
+
+```sql
+-- Your functions here
+```
+
+### Exercise 3: Authentication-Aware Functions
+1. Create `my_workshop_history()` showing current user's past workshops
+2. Create `register_for_workshop(workshop_id INTEGER)` with user context
+3. Create admin-only function `get_user_statistics()`
+
+```sql
+-- Your functions here
+```
+
+### Exercise 4: Complex Business Logic
+1. Create `calculate_workshop_revenue()` with detailed breakdown
+2. Create `suggest_workshops(user_preferences JSONB)` recommendation engine
+3. Create `batch_update_workshop_status(workshop_ids INTEGER[], new_status TEXT)`
+
+```sql
+-- Your functions here
+```
+
+### Exercise 5: Performance and Caching
+1. Create a caching mechanism for expensive calculations
+2. Implement a function that uses prepared statements
+3. Create performance benchmarks comparing cached vs non-cached functions
+4. Add function monitoring and logging
+
+```sql
+-- Your optimized functions here
+```
+
+```bash
+# Your performance tests here
+```
+
 ## Next Steps
 
 Now that you understand how to use functions with PostgREST, let's explore how to combine PostgREST with PostGIS for spatial data APIs.
