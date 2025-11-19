@@ -1,0 +1,2670 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive workshop on PostgREST and PostGIS">
+      
+      
+        <meta name="author" content="Workshop Team">
+      
+      
+        <link rel="canonical" href="https://postgrest-ws.rottengrapes.tech/postgrest-gis/">
+      
+      
+        <link rel="prev" href="../postgrest-functions/">
+      
+      
+        <link rel="next" href="../exercise-solutions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>GIS with PostgREST - PostgREST Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gis-with-postgrest" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PostgREST Workshop" class="md-header__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PostgREST Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GIS with PostgREST
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PostgREST Workshop" class="md-nav__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    PostgREST Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgis-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostGIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setting up PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIS with PostgREST
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIS with PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-spatial-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview of Spatial Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview of Spatial Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-spatial-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting Up Spatial Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distance-based-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance-Based Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-containment-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Containment Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-aggregation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Aggregation Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffer-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffer Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-and-path-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route and Path Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importexport-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import/Export Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Applications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-spatial-data_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting Up Spatial Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting Up Spatial Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-spatial-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Spatial Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insert-sample-spatial-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Insert Sample Spatial Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-spatial-queries-via-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Spatial Queries via REST
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Spatial Queries via REST">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-all-locations-with-coordinates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get All Locations with Coordinates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-spatial-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Spatial Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spatial-functions-for-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Functions for PostgREST
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spatial Functions for PostgREST">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#distance-based-queries_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance-Based Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nearest-neighbor-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nearest Neighbor Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-containment-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Containment Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-spatial-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Spatial Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Spatial Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#find-nearby-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Nearby Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-nearest-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Nearest Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-locations-in-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Locations in Region
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-spatial-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Spatial Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Spatial Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spatial-aggregation-functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Aggregation Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-buffer-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Buffer Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-and-path-functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route and Path Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spatial-data-importexport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Data Import/Export
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spatial Data Import/Export">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bulk-import-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulk Import Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spatial-indexing-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Indexing and Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spatial Indexing and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optimizing-spatial-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimizing Spatial Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-statistics-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Statistics Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real-World Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#location-based-search-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Location-Based Search API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geofencing-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geofencing API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-analytics-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Analytics API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Frontend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leafletjs-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leaflet.js Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-spatial-data-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Spatial Data Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-distance-based-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: Distance-Based Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-spatial-analysis-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Spatial Analysis API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-geojson-importexport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: GeoJSON Import/Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-advanced-spatial-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Advanced Spatial Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-6-frontend-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 6: Frontend Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-spatial-concepts-demonstrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Spatial Concepts Demonstrated
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Spatial Concepts Demonstrated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinate Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distance-calculations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance Calculations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indexing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indexing Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercise-solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution for Exercises
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview-of-spatial-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview of Spatial Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview of Spatial Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setting-up-spatial-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting Up Spatial Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distance-based-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance-Based Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-containment-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Containment Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-aggregation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Aggregation Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buffer-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buffer Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-and-path-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route and Path Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#importexport-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import/Export Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Applications
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-up-spatial-data_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting Up Spatial Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setting Up Spatial Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-spatial-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Spatial Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insert-sample-spatial-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Insert Sample Spatial Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-spatial-queries-via-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Spatial Queries via REST
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic Spatial Queries via REST">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-all-locations-with-coordinates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get All Locations with Coordinates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-spatial-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Spatial Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spatial-functions-for-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Functions for PostgREST
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spatial Functions for PostgREST">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#distance-based-queries_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance-Based Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nearest-neighbor-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nearest Neighbor Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-containment-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Containment Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-spatial-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Spatial Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Spatial Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#find-nearby-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Nearby Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-nearest-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Nearest Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-locations-in-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Locations in Region
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-spatial-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Spatial Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Spatial Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spatial-aggregation-functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Aggregation Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-buffer-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Buffer Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-and-path-functions_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route and Path Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spatial-data-importexport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Data Import/Export
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spatial Data Import/Export">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bulk-import-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bulk Import Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#export-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Export Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spatial-indexing-and-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Indexing and Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spatial Indexing and Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#optimizing-spatial-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optimizing Spatial Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-statistics-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Statistics Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#real-world-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Real-World Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#location-based-search-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Location-Based Search API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geofencing-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geofencing API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-analytics-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Analytics API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Frontend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#leafletjs-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Leaflet.js Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-spatial-data-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Spatial Data Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-distance-based-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: Distance-Based Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-spatial-analysis-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Spatial Analysis API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-geojson-importexport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: GeoJSON Import/Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-advanced-spatial-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Advanced Spatial Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-6-frontend-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 6: Frontend Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-spatial-concepts-demonstrated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Spatial Concepts Demonstrated
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Spatial Concepts Demonstrated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinate Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distance-calculations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distance Calculations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indexing-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indexing Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="gis-with-postgrest">GIS with PostgREST</h1>
+<p>Combining PostgREST with PostGIS creates powerful spatial APIs that can handle geographic data and spatial operations through REST endpoints.</p>
+<h2 id="overview-of-spatial-operations">Overview of Spatial Operations</h2>
+<p>This module covers comprehensive spatial functionality organized into key areas:</p>
+<h3 id="setting-up-spatial-data"><strong>Setting Up Spatial Data</strong></h3>
+<p>Establishes the foundation for spatial operations by creating tables with geometry columns, spatial indexes, and sample geographic data. This section shows how to properly structure spatial databases for optimal performance.</p>
+<h3 id="distance-based-queries"><strong>Distance-Based Queries</strong></h3>
+<p>Implements location-based searches using accurate geographic calculations. These functions find locations within specified distances or return the nearest neighbors to a point - essential for "find nearby" features in applications.</p>
+<h3 id="spatial-containment-operations"><strong>Spatial Containment Operations</strong></h3>
+<p>Determines spatial relationships like "what's inside what" using polygon boundaries. Critical for geofencing, administrative boundary queries, and determining if points fall within service areas.</p>
+<h3 id="spatial-aggregation-functions"><strong>Spatial Aggregation Functions</strong></h3>
+<p>Combines and analyzes multiple spatial features to generate statistics, density metrics, and dashboard-style analytics. Groups spatial data by regions and categories for business intelligence.</p>
+<h3 id="buffer-operations"><strong>Buffer Operations</strong></h3>
+<p>Creates zones or service areas around geographic features. Used for delivery zones, impact analysis, and determining coverage areas around points of interest.</p>
+<h3 id="route-and-path-functions"><strong>Route and Path Functions</strong></h3>
+<p>Handles linear geographic features like roads, trails, and transportation routes. Includes intersection analysis to determine which routes pass through specific regions.</p>
+<h3 id="importexport-operations"><strong>Import/Export Operations</strong></h3>
+<p>Manages large-scale spatial data integration with support for standard formats like GeoJSON. Includes bulk loading and extraction capabilities for data interchange.</p>
+<h3 id="performance-optimization"><strong>Performance Optimization</strong></h3>
+<p>Covers spatial indexing strategies, query optimization, and performance monitoring for production spatial applications.</p>
+<h2 id="real-world-applications">Real-World Applications</h2>
+<p>These spatial operations enable:
+- <strong>Location Services</strong> - Find nearby restaurants, gas stations, points of interest
+- <strong>Geofencing</strong> - Determine if users are in delivery zones or restricted areas
+- <strong>Route Planning</strong> - Calculate optimal paths and analyze transportation networks
+- <strong>Analytics Dashboards</strong> - Aggregate spatial data for business intelligence
+- <strong>Data Integration</strong> - Import/export geographic data from various sources</p>
+<h2 id="setting-up-spatial-data_1">Setting Up Spatial Data</h2>
+<h3 id="create-spatial-tables">Create Spatial Tables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Create locations table with spatial data</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="n">category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="k">location</span><span class="w"> </span><span class="n">GEOMETRY</span><span class="p">(</span><span class="n">POINT</span><span class="p">,</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span><span class="w"> </span><span class="c1">-- WGS84 coordinates</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="p">);</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1">-- Create spatial index</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_locations_geom</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIST</span><span class="p">(</span><span class="k">location</span><span class="p">);</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1">-- Create regions table for polygonal data</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">regions</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="n">region_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span><span class="w"> </span><span class="c1">-- city, state, country, etc.</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="n">boundary</span><span class="w"> </span><span class="n">GEOMETRY</span><span class="p">(</span><span class="n">POLYGON</span><span class="p">,</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="n">area_sqkm</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">    </span><span class="n">population</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">);</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_regions_boundary</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">regions</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIST</span><span class="p">(</span><span class="n">boundary</span><span class="p">);</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c1">-- Grant permissions</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">regions</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">USAGE</span><span class="p">,</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">SEQUENCES</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="insert-sample-spatial-data">Insert Sample Spatial Data</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Insert sample locations</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="p">,</span><span class="w"> </span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="k">location</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">(</span><span class="s1">&#39;Boston Common&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Historic public park in downtown Boston&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;park&#39;</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="o">-</span><span class="mi">71</span><span class="p">.</span><span class="mi">065</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">.</span><span class="mi">355</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">)),</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">(</span><span class="s1">&#39;Harvard University&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Prestigious university in Cambridge&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;education&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w"> </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="o">-</span><span class="mi">71</span><span class="p">.</span><span class="mi">119</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">.</span><span class="mi">373</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">)),</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">(</span><span class="s1">&#39;MIT&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Massachusetts Institute of Technology&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;education&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w"> </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="o">-</span><span class="mi">71</span><span class="p">.</span><span class="mi">092</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">.</span><span class="mi">360</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">)),</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">(</span><span class="s1">&#39;Fenway Park&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Home of the Boston Red Sox&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sports&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w"> </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="o">-</span><span class="mi">71</span><span class="p">.</span><span class="mi">097</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">.</span><span class="mi">347</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">));</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1">-- Insert sample regions</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">regions</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">region_type</span><span class="p">,</span><span class="w"> </span><span class="n">boundary</span><span class="p">,</span><span class="w"> </span><span class="n">area_sqkm</span><span class="p">,</span><span class="w"> </span><span class="n">population</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">(</span><span class="s1">&#39;Cambridge&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;city&#39;</span><span class="p">,</span><span class="w"> </span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w"> </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_GeomFromText</span><span class="p">(</span><span class="s1">&#39;POLYGON((-71.16 42.35, -71.16 42.40, -71.06 42.40, -71.06 42.35, -71.16 42.35))&#39;</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w"> </span><span class="mi">18</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">118000</span><span class="p">),</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="p">(</span><span class="s1">&#39;Boston&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;city&#39;</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w"> </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_GeomFromText</span><span class="p">(</span><span class="s1">&#39;POLYGON((-71.20 42.25, -71.20 42.40, -70.95 42.40, -70.95 42.25, -71.20 42.25))&#39;</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w"> </span><span class="mi">232</span><span class="p">.</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">695000</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="basic-spatial-queries-via-rest">Basic Spatial Queries via REST</h2>
+<h3 id="get-all-locations-with-coordinates">Get All Locations with Coordinates</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get locations with geometry as GeoJSON</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/locations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/geo+json&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Get locations with geometry as GeoJSON</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/locations?select=id,name,category,location&quot;</span>
+</code></pre></div>
+<h3 id="custom-spatial-views">Custom Spatial Views</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Create view with GeoJSON output for geometry</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">locations_geojson</span><span class="w"> </span><span class="k">AS</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">description</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="n">category</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="n">ST_AsGeoJSON</span><span class="p">(</span><span class="k">location</span><span class="p">)::</span><span class="n">json</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">geometry</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="n">created_at</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span><span class="p">;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1">-- Grant permissions</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">locations_geojson</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Query the GeoJSON view</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/locations_geojson&quot;</span>
+</code></pre></div>
+<h2 id="spatial-functions-for-postgrest">Spatial Functions for PostgREST</h2>
+<h3 id="distance-based-queries_1">Distance-Based Queries</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- Function to find locations within distance</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">locations_within_distance</span><span class="p">(</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="n">center_lng</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">center_lat</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="n">distance_meters</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">1000</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="n">category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="n">distance</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="n">geometry</span><span class="w"> </span><span class="n">JSON</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="k">BEGIN</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">category</span><span class="p">,</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="n">ST_Distance</span><span class="p">(</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">            </span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span><span class="w"> </span><span class="mi">3857</span><span class="p">),</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">            </span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="n">center_lng</span><span class="p">,</span><span class="w"> </span><span class="n">center_lat</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span><span class="w"> </span><span class="mi">3857</span><span class="p">)</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">        </span><span class="p">)::</span><span class="nb">DECIMAL</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">distance_meters</span><span class="p">,</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">        </span><span class="n">ST_AsGeoJSON</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">)::</span><span class="n">json</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">geometry</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="n">l</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ST_DWithin</span><span class="p">(</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">        </span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span><span class="w"> </span><span class="mi">3857</span><span class="p">),</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">        </span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="n">center_lng</span><span class="p">,</span><span class="w"> </span><span class="n">center_lat</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span><span class="w"> </span><span class="mi">3857</span><span class="p">),</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">        </span><span class="n">distance_meters</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">    </span><span class="p">)</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">distance_meters</span><span class="p">;</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">locations_within_distance</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="nearest-neighbor-function">Nearest Neighbor Function</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- Function to find nearest locations</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">nearest_locations</span><span class="p">(</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="n">center_lng</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">center_lat</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">limit_count</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="n">category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="n">distance_meters</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="n">geometry</span><span class="w"> </span><span class="n">JSON</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">BEGIN</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">category</span><span class="p">,</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">        </span><span class="n">ST_Distance</span><span class="p">(</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">            </span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span><span class="w"> </span><span class="mi">3857</span><span class="p">),</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">            </span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="n">center_lng</span><span class="p">,</span><span class="w"> </span><span class="n">center_lat</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span><span class="w"> </span><span class="mi">3857</span><span class="p">)</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">        </span><span class="p">)::</span><span class="nb">DECIMAL</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">distance_meters</span><span class="p">,</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">        </span><span class="n">ST_AsGeoJSON</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">)::</span><span class="n">json</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">geometry</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="n">l</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="w"> </span><span class="o">&lt;-&gt;</span><span class="w"> </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="n">center_lng</span><span class="p">,</span><span class="w"> </span><span class="n">center_lat</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">)</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span><span class="k">LIMIT</span><span class="w"> </span><span class="n">limit_count</span><span class="p">;</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">nearest_locations</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="spatial-containment-function">Spatial Containment Function</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Function to find locations within a region</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">locations_in_region</span><span class="p">(</span><span class="n">region_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="n">location_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="n">location_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="n">location_category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="n">region</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="n">geometry</span><span class="w"> </span><span class="n">JSON</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">BEGIN</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">        </span><span class="n">l</span><span class="p">.</span><span class="n">category</span><span class="p">,</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">        </span><span class="n">r</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">        </span><span class="n">ST_AsGeoJSON</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">)::</span><span class="n">json</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">geometry</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">regions</span><span class="w"> </span><span class="n">r</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">region_name</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">      </span><span class="k">AND</span><span class="w"> </span><span class="n">ST_Within</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">boundary</span><span class="p">);</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">locations_in_region</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="using-spatial-functions">Using Spatial Functions</h2>
+<h3 id="find-nearby-locations">Find Nearby Locations</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find locations within 2000 meters of a point</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/locations_within_distance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s1">    &quot;center_lng&quot;: -71.065,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;center_lat&quot;: 42.355,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">    &quot;distance_meters&quot;: 2000</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="find-nearest-locations">Find Nearest Locations</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Find 3 nearest locations</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/nearest_locations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s1">    &quot;center_lng&quot;: -71.065,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s1">    &quot;center_lat&quot;: 42.355,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s1">    &quot;limit_count&quot;: 3</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="find-locations-in-region">Find Locations in Region</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Find all locations in Cambridge</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/locations_in_region&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;region_name&quot;: &quot;Cambridge&quot;}&#39;</span>
+</code></pre></div>
+<h2 id="advanced-spatial-operations">Advanced Spatial Operations</h2>
+<p>This section demonstrates sophisticated spatial analysis capabilities that go beyond basic distance and containment queries.</p>
+<h3 id="spatial-aggregation-functions_1">Spatial Aggregation Functions</h3>
+<p><strong>Purpose</strong>: Combines multiple spatial features to generate comprehensive statistics and analytics for regions.</p>
+<p><strong>What it does</strong>: 
+- Counts locations by category within polygon boundaries
+- Calculates area measurements and center points
+- Groups spatial data for dashboard-style reporting
+- Provides density metrics for business intelligence</p>
+<p><strong>Use cases</strong>: Regional analysis, market research, resource planning, demographic studies
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- Function to get region statistics</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">region_statistics</span><span class="p">(</span><span class="n">region_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">DECLARE</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="n">region_geom</span><span class="w"> </span><span class="n">GEOMETRY</span><span class="p">;</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="k">result</span><span class="w"> </span><span class="n">JSON</span><span class="p">;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">BEGIN</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="c1">-- Get region geometry</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">boundary</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">region_geom</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">regions</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">region_name</span><span class="p">;</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">region_geom</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Region not found&#39;</span><span class="p">);</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">    </span><span class="c1">-- Calculate statistics</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">        </span><span class="s1">&#39;region_name&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">region_name</span><span class="p">,</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">        </span><span class="s1">&#39;total_locations&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">id</span><span class="p">),</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">        </span><span class="s1">&#39;locations_by_category&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">json_object_agg</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">category_count</span><span class="p">),</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">        </span><span class="s1">&#39;area_sqkm&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="n">area_sqkm</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">regions</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">region_name</span><span class="p">),</span>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">        </span><span class="s1">&#39;center_point&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">ST_AsGeoJSON</span><span class="p">(</span><span class="n">ST_Centroid</span><span class="p">(</span><span class="n">region_geom</span><span class="p">))::</span><span class="n">json</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">result</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">        </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="w">            </span><span class="n">l</span><span class="p">.</span><span class="n">category</span><span class="p">,</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="w">            </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">category_count</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="n">l</span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ST_Within</span><span class="p">(</span><span class="n">l</span><span class="p">.</span><span class="k">location</span><span class="p">,</span><span class="w"> </span><span class="n">region_geom</span><span class="p">)</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">        </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">category</span>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="n">l</span><span class="p">;</span>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">region_statistics</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div></p>
+<h3 id="spatial-buffer-operations">Spatial Buffer Operations</h3>
+<p><strong>Purpose</strong>: Creates circular zones or service areas around geographic points for proximity analysis.</p>
+<p><strong>What it does</strong>:
+- Generates buffer zones at specified distances around locations
+- Calculates accurate areas using projected coordinate systems
+- Returns results as GeoJSON for mapping applications
+- Supports variable buffer sizes for different analysis needs</p>
+<p><strong>Use cases</strong>: Service area analysis, delivery zones, impact assessment, coverage planning
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- Function to create buffer around location</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">location_buffer</span><span class="p">(</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="n">location_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">buffer_meters</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">500</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="k">DECLARE</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="n">location_geom</span><span class="w"> </span><span class="n">GEOMETRY</span><span class="p">;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="n">buffer_geom</span><span class="w"> </span><span class="n">GEOMETRY</span><span class="p">;</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="k">BEGIN</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="c1">-- Get location geometry</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">location</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">location_geom</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">location_id</span><span class="p">;</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">location_geom</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Location not found&#39;</span><span class="p">);</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">    </span><span class="c1">-- Create buffer in Web Mercator for accurate distance</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span><span class="n">buffer_geom</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">ST_Transform</span><span class="p">(</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">        </span><span class="n">ST_Buffer</span><span class="p">(</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">            </span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">location_geom</span><span class="p">,</span><span class="w"> </span><span class="mi">3857</span><span class="p">),</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="w">            </span><span class="n">buffer_meters</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">        </span><span class="p">),</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">        </span><span class="mi">4326</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">        </span><span class="s1">&#39;location_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">location_id</span><span class="p">,</span>
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">        </span><span class="s1">&#39;buffer_meters&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">buffer_meters</span><span class="p">,</span>
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="w">        </span><span class="s1">&#39;buffer_geometry&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">ST_AsGeoJSON</span><span class="p">(</span><span class="n">buffer_geom</span><span class="p">)::</span><span class="n">json</span><span class="p">,</span>
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="w">        </span><span class="s1">&#39;buffer_area_sqm&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">ST_Area</span><span class="p">(</span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">buffer_geom</span><span class="p">,</span><span class="w"> </span><span class="mi">3857</span><span class="p">))</span>
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">location_buffer</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div></p>
+<h3 id="route-and-path-functions_1">Route and Path Functions</h3>
+<p><strong>Purpose</strong>: Manages linear geographic features and analyzes their relationships with other spatial data.</p>
+<p><strong>What it does</strong>:
+- Stores and queries transportation routes, trails, and linear paths
+- Finds routes that intersect with specific regions or boundaries
+- Analyzes network connectivity and accessibility
+- Supports route planning and logistics applications</p>
+<p><strong>Use cases</strong>: Transportation planning, logistics optimization, trail management, utility network analysis
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- Create routes table</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">routes</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="n">path</span><span class="w"> </span><span class="n">GEOMETRY</span><span class="p">(</span><span class="n">LINESTRING</span><span class="p">,</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="n">distance_km</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p">);</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_routes_path</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">routes</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIST</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1">-- Function to find routes intersecting with a region</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">routes_through_region</span><span class="p">(</span><span class="n">region_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">    </span><span class="n">route_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">    </span><span class="n">route_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span><span class="n">distance_km</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">    </span><span class="n">geometry</span><span class="w"> </span><span class="n">JSON</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="k">BEGIN</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="w">        </span><span class="n">r</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">        </span><span class="n">r</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="w">        </span><span class="n">r</span><span class="p">.</span><span class="n">distance_km</span><span class="p">,</span>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="w">        </span><span class="n">ST_AsGeoJSON</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">path</span><span class="p">)::</span><span class="n">json</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">geometry</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">routes</span><span class="w"> </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">regions</span><span class="w"> </span><span class="n">reg</span>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">region_name</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="w">      </span><span class="k">AND</span><span class="w"> </span><span class="n">ST_Intersects</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">boundary</span><span class="p">);</span>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">routes_through_region</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div></p>
+<h2 id="spatial-data-importexport">Spatial Data Import/Export</h2>
+<p>Handles large-scale spatial data integration with robust error handling and standard format support.</p>
+<h3 id="bulk-import-function">Bulk Import Function</h3>
+<p><strong>Purpose</strong>: Efficiently loads large volumes of geographic data from external sources.</p>
+<p><strong>What it does</strong>:
+- Processes GeoJSON FeatureCollections with multiple geographic features
+- Validates geometries and handles import errors gracefully
+- Provides detailed success/failure reporting
+- Supports batch processing for performance</p>
+<p><strong>Use cases</strong>: Data migration, third-party data integration, bulk updates, initial system setup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">-- Function to import GeoJSON features</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">import_geojson_locations</span><span class="p">(</span><span class="n">geojson_data</span><span class="w"> </span><span class="n">JSONB</span><span class="p">)</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">DECLARE</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="n">feature</span><span class="w"> </span><span class="n">JSONB</span><span class="p">;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="n">success_count</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="n">error_count</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span><span class="n">errors</span><span class="w"> </span><span class="n">JSONB</span><span class="p">[]</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="p">;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="k">BEGIN</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span><span class="c1">-- Process each feature</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="n">feature</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">jsonb_array_elements</span><span class="p">(</span><span class="n">geojson_data</span><span class="o">-&gt;</span><span class="s1">&#39;features&#39;</span><span class="p">)</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span><span class="n">LOOP</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">        </span><span class="k">BEGIN</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">            </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="p">,</span><span class="w"> </span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="k">location</span><span class="p">)</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">            </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">                </span><span class="n">feature</span><span class="o">-&gt;</span><span class="s1">&#39;properties&#39;</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;name&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">                </span><span class="n">feature</span><span class="o">-&gt;</span><span class="s1">&#39;properties&#39;</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;description&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">                </span><span class="n">feature</span><span class="o">-&gt;</span><span class="s1">&#39;properties&#39;</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;category&#39;</span><span class="p">,</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">                </span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_GeomFromGeoJSON</span><span class="p">(</span><span class="n">feature</span><span class="o">-&gt;</span><span class="s1">&#39;geometry&#39;</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">)</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">            </span><span class="p">);</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">            </span><span class="n">success_count</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">success_count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">        </span><span class="k">EXCEPTION</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">OTHERS</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">            </span><span class="n">error_count</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">error_count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">            </span><span class="n">errors</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">array_append</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">                </span><span class="s1">&#39;feature&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">feature</span><span class="p">,</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">                </span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">SQLERRM</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">            </span><span class="p">)::</span><span class="n">jsonb</span><span class="p">);</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">        </span><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="w">        </span><span class="s1">&#39;success_count&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">success_count</span><span class="p">,</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a><span class="w">        </span><span class="s1">&#39;error_count&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">error_count</span><span class="p">,</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="w">        </span><span class="s1">&#39;errors&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">errors</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">import_geojson_locations</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">;</span>
+</code></pre></div></p>
+<h3 id="export-function">Export Function</h3>
+<p><strong>Purpose</strong>: Extracts spatial data in web-ready formats for external consumption.</p>
+<p><strong>What it does</strong>:
+- Exports data as GeoJSON FeatureCollections (web mapping standard)
+- Supports filtering by category, bounding box, and other criteria
+- Creates properly formatted geographic data for APIs and applications
+- Enables data sharing and integration with external systems</p>
+<p><strong>Use cases</strong>: API data feeds, map visualization, data sharing, backup/archival, third-party integrations
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- Function to export locations as GeoJSON FeatureCollection</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">export_locations_geojson</span><span class="p">(</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="n">category_filter</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="n">bbox_minx</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="n">bbox_miny</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="n">bbox_maxx</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="n">bbox_maxy</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="p">)</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="k">DECLARE</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span><span class="n">bbox_geom</span><span class="w"> </span><span class="n">GEOMETRY</span><span class="p">;</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="k">BEGIN</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="c1">-- Create bounding box geometry if provided</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">bbox_minx</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">bbox_miny</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">       </span><span class="n">bbox_maxx</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">bbox_maxy</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">        </span><span class="n">bbox_geom</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">ST_MakeEnvelope</span><span class="p">(</span><span class="n">bbox_minx</span><span class="p">,</span><span class="w"> </span><span class="n">bbox_miny</span><span class="p">,</span><span class="w"> </span><span class="n">bbox_maxx</span><span class="p">,</span><span class="w"> </span><span class="n">bbox_maxy</span><span class="p">,</span><span class="w"> </span><span class="mi">4326</span><span class="p">);</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="w">        </span><span class="k">SELECT</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="w">            </span><span class="s1">&#39;type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;FeatureCollection&#39;</span><span class="p">,</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">            </span><span class="s1">&#39;features&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">json_agg</span><span class="p">(</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="w">                </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="w">                    </span><span class="s1">&#39;type&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Feature&#39;</span><span class="p">,</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="w">                    </span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="w">                    </span><span class="s1">&#39;geometry&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">ST_AsGeoJSON</span><span class="p">(</span><span class="k">location</span><span class="p">)::</span><span class="n">json</span><span class="p">,</span>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="w">                    </span><span class="s1">&#39;properties&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="w">                        </span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="w">                        </span><span class="s1">&#39;description&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="p">,</span>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="w">                        </span><span class="s1">&#39;category&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">category</span><span class="p">,</span>
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="w">                        </span><span class="s1">&#39;created_at&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span>
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="w">                    </span><span class="p">)</span>
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a><span class="w">                </span><span class="p">)</span>
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a><span class="w">            </span><span class="p">)</span>
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a><span class="w">        </span><span class="p">)</span>
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a><span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span>
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a><span class="w">        </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">category_filter</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">category_filter</span><span class="p">)</span>
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a><span class="w">          </span><span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">bbox_geom</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">ST_Intersects</span><span class="p">(</span><span class="k">location</span><span class="p">,</span><span class="w"> </span><span class="n">bbox_geom</span><span class="p">))</span>
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a>
+<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">export_locations_geojson</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div></p>
+<h2 id="spatial-indexing-and-performance">Spatial Indexing and Performance</h2>
+<p>Critical for production spatial applications handling large datasets and high query volumes.</p>
+<h3 id="optimizing-spatial-queries">Optimizing Spatial Queries</h3>
+<p><strong>Purpose</strong>: Ensures fast spatial query performance through proper indexing strategies.</p>
+<p><strong>What it does</strong>:
+- Creates specialized spatial indexes (GiST) for geometry columns
+- Implements partial indexes for common query patterns
+- Provides query performance analysis tools
+- Optimizes for specific use cases and data access patterns</p>
+<p><strong>Key concepts</strong>:
+- <strong>GiST Indexes</strong>: R-tree structures optimized for spatial data
+- <strong>Partial Indexes</strong>: Indexes on subsets of data for specific queries
+- <strong>Query Planning</strong>: Understanding how PostgreSQL executes spatial queries
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">-- Create partial indexes for common queries</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_locations_category_geom</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIST</span><span class="p">(</span><span class="k">location</span><span class="p">)</span><span class="w"> </span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;education&#39;</span><span class="p">;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_locations_recent_geom</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIST</span><span class="p">(</span><span class="k">location</span><span class="p">)</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">;</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1">-- Analyze query performance</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="k">EXPLAIN</span><span class="w"> </span><span class="p">(</span><span class="k">ANALYZE</span><span class="p">,</span><span class="w"> </span><span class="n">BUFFERS</span><span class="p">)</span><span class="w"> </span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span><span class="w"> </span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">ST_DWithin</span><span class="p">(</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">    </span><span class="n">ST_Transform</span><span class="p">(</span><span class="k">location</span><span class="p">,</span><span class="w"> </span><span class="mi">3857</span><span class="p">),</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">    </span><span class="n">ST_Transform</span><span class="p">(</span><span class="n">ST_SetSRID</span><span class="p">(</span><span class="n">ST_MakePoint</span><span class="p">(</span><span class="o">-</span><span class="mi">71</span><span class="p">.</span><span class="mi">065</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">.</span><span class="mi">355</span><span class="p">),</span><span class="w"> </span><span class="mi">4326</span><span class="p">),</span><span class="w"> </span><span class="mi">3857</span><span class="p">),</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">    </span><span class="mi">1000</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="p">);</span>
+</code></pre></div></p>
+<h3 id="spatial-statistics-function">Spatial Statistics Function</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">-- Function to get spatial index statistics</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">spatial_index_stats</span><span class="p">()</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">BEGIN</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">        </span><span class="s1">&#39;locations_count&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">locations</span><span class="p">),</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">        </span><span class="s1">&#39;regions_count&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">regions</span><span class="p">),</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">        </span><span class="s1">&#39;spatial_indexes&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">json_build_array</span><span class="p">(</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">            </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">                </span><span class="s1">&#39;table&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;locations&#39;</span><span class="p">,</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">                </span><span class="s1">&#39;index&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;idx_locations_geom&#39;</span><span class="p">,</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">                </span><span class="s1">&#39;size&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">&#39;idx_locations_geom&#39;</span><span class="p">))</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">            </span><span class="p">),</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">            </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">                </span><span class="s1">&#39;table&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;regions&#39;</span><span class="p">,</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">                </span><span class="s1">&#39;index&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;idx_regions_boundary&#39;</span><span class="p">,</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">                </span><span class="s1">&#39;size&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">pg_size_pretty</span><span class="p">(</span><span class="n">pg_relation_size</span><span class="p">(</span><span class="s1">&#39;idx_regions_boundary&#39;</span><span class="p">))</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">            </span><span class="p">)</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">        </span><span class="p">)</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">spatial_index_stats</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="real-world-examples">Real-World Examples</h2>
+<h3 id="location-based-search-api">Location-Based Search API</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Search for educational institutions near a point</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/locations_within_distance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="s1">    &quot;center_lng&quot;: -71.065,</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="s1">    &quot;center_lat&quot;: 42.355,</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="s1">    &quot;distance_meters&quot;: 5000</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[] | select(.category == &quot;education&quot;)&#39;</span>
+</code></pre></div>
+<h3 id="geofencing-api">Geofencing API</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check if a point is within Cambridge</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/locations_in_region&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;region_name&quot;: &quot;Cambridge&quot;}&#39;</span>
+</code></pre></div>
+<h3 id="spatial-analytics-api">Spatial Analytics API</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Get statistics for Boston region</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/region_statistics&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;region_name&quot;: &quot;Boston&quot;}&#39;</span>
+</code></pre></div>
+<h2 id="best-practices">Best Practices</h2>
+<ol>
+<li><strong>Use appropriate coordinate systems</strong> - WGS84 (4326) for storage, projected systems for calculations</li>
+<li><strong>Create spatial indexes</strong> - Essential for performance on geometry columns</li>
+<li><strong>Validate geometries</strong> - Use ST_IsValid() to ensure data quality</li>
+<li><strong>Use ST_Transform for distance calculations</strong> - Convert to appropriate projected coordinate system</li>
+<li><strong>Optimize queries</strong> - Use ST_DWithin instead of ST_Distance for proximity queries</li>
+<li><strong>Consider data size</strong> - Use ST_Simplify for large polygons when appropriate</li>
+<li><strong>Monitor performance</strong> - Use EXPLAIN ANALYZE for spatial queries</li>
+<li><strong>Cache expensive calculations</strong> - Store computed values like area, length when possible</li>
+</ol>
+<h2 id="integration-with-frontend">Integration with Frontend</h2>
+<h3 id="leafletjs-example">Leaflet.js Example</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1">// Fetch locations and display on map</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">loadNearbyLocations</span><span class="p">(</span><span class="nx">lat</span><span class="p">,</span><span class="w"> </span><span class="nx">lng</span><span class="p">,</span><span class="w"> </span><span class="nx">distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s1">&#39;/rpc/locations_within_distance&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">        </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;POST&#39;</span><span class="p">,</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">        </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">        </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">            </span><span class="nx">center_lng</span><span class="o">:</span><span class="w"> </span><span class="nx">lng</span><span class="p">,</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">            </span><span class="nx">center_lat</span><span class="o">:</span><span class="w"> </span><span class="nx">lat</span><span class="p">,</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">            </span><span class="nx">distance_meters</span><span class="o">:</span><span class="w"> </span><span class="nx">distance</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">        </span><span class="p">})</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">locations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">    </span><span class="nx">locations</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">location</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">coords</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">location</span><span class="p">.</span><span class="nx">geometry</span><span class="p">.</span><span class="nx">coordinates</span><span class="p">;</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">        </span><span class="nx">L</span><span class="p">.</span><span class="nx">marker</span><span class="p">([</span><span class="nx">coords</span><span class="p">[</span><span class="mf">1</span><span class="p">],</span><span class="w"> </span><span class="nx">coords</span><span class="p">[</span><span class="mf">0</span><span class="p">]])</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">            </span><span class="p">.</span><span class="nx">bindPopup</span><span class="p">(</span><span class="sb">`&lt;b&gt;</span><span class="si">${</span><span class="nx">location</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb">&lt;/b&gt;&lt;br&gt;</span><span class="si">${</span><span class="nx">location</span><span class="p">.</span><span class="nx">category</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="w">            </span><span class="p">.</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="exercises">Exercises</h2>
+<h3 id="exercise-1-spatial-data-setup">Exercise 1: Spatial Data Setup</h3>
+<ol>
+<li>Create a <code>restaurants</code> table with spatial data (name, cuisine, rating, location)</li>
+<li>Insert 10 restaurants in the Boston area with real coordinates</li>
+<li>Create appropriate spatial indexes</li>
+<li>Test basic spatial queries via PostgREST</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1">-- Your spatial table setup here</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Your API tests here</span>
+</code></pre></div>
+<h3 id="exercise-2-distance-based-functions">Exercise 2: Distance-Based Functions</h3>
+<ol>
+<li>Create <code>find_restaurants_nearby(lat, lng, radius, cuisine_type)</code> function</li>
+<li>Create <code>get_restaurant_density(region_name)</code> function</li>
+<li>Create <code>find_food_deserts(max_distance)</code> function to find areas with no restaurants</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1">-- Your spatial functions here</span>
+</code></pre></div>
+<h3 id="exercise-3-spatial-analysis-api">Exercise 3: Spatial Analysis API</h3>
+<ol>
+<li>Create delivery zones as polygons</li>
+<li>Build <code>check_delivery_availability(lat, lng)</code> function</li>
+<li>Create <code>optimize_delivery_route(restaurant_id, delivery_addresses)</code> function</li>
+<li>Add real-time location tracking capabilities</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1">-- Your delivery system here</span>
+</code></pre></div>
+<h3 id="exercise-4-geojson-importexport">Exercise 4: GeoJSON Import/Export</h3>
+<ol>
+<li>Create functions to import restaurant data from GeoJSON</li>
+<li>Build export functions with filtering (by cuisine, rating, distance)</li>
+<li>Create a bulk update function for restaurant locations</li>
+<li>Add data validation for imported geometries</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1">-- Your import/export functions here</span>
+</code></pre></div>
+<h3 id="exercise-5-advanced-spatial-features">Exercise 5: Advanced Spatial Features</h3>
+<ol>
+<li>Create a heat map API showing restaurant density</li>
+<li>Build spatial clustering for restaurant recommendations</li>
+<li>Create walking/driving time calculations using external APIs</li>
+<li>Implement geofencing for restaurant promotions</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1">-- Your advanced spatial features here</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Your integration tests here</span>
+</code></pre></div>
+<h3 id="exercise-6-frontend-integration">Exercise 6: Frontend Integration</h3>
+<ol>
+<li>Create a React component that displays restaurants on a map</li>
+<li>Add search functionality with spatial filtering</li>
+<li>Implement real-time location updates</li>
+<li>Create a mobile-responsive restaurant finder</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1">// Your frontend code here</span>
+</code></pre></div>
+<h2 id="key-spatial-concepts-demonstrated">Key Spatial Concepts Demonstrated</h2>
+<h3 id="coordinate-systems"><strong>Coordinate Systems</strong></h3>
+<ul>
+<li><strong>WGS84 (SRID 4326)</strong>: Geographic coordinates (latitude/longitude) for data storage</li>
+<li><strong>Web Mercator (SRID 3857)</strong>: Projected coordinates for accurate distance calculations</li>
+<li><strong>Coordinate Transformation</strong>: Converting between systems for different operations</li>
+</ul>
+<h3 id="distance-calculations"><strong>Distance Calculations</strong></h3>
+<ul>
+<li><strong>Geography vs Geometry</strong>: Using geography type for accurate spheroidal calculations</li>
+<li><strong>Projected Calculations</strong>: Converting to meters for precise distance measurements</li>
+<li><strong>Performance Trade-offs</strong>: Balancing accuracy with query speed</li>
+</ul>
+<h3 id="spatial-relationships"><strong>Spatial Relationships</strong></h3>
+<ul>
+<li><strong>ST_Within</strong>: Point-in-polygon testing for containment</li>
+<li><strong>ST_Intersects</strong>: Checking if geometries overlap or touch</li>
+<li><strong>ST_DWithin</strong>: Efficient proximity queries within specified distances</li>
+<li><strong>ST_Distance</strong>: Calculating exact distances between features</li>
+</ul>
+<h3 id="indexing-strategy"><strong>Indexing Strategy</strong></h3>
+<ul>
+<li><strong>GiST Indexes</strong>: R-tree spatial indexes for fast geometric queries</li>
+<li><strong>Partial Indexes</strong>: Optimized indexes for specific query patterns</li>
+<li><strong>Index Maintenance</strong>: Keeping spatial indexes current and efficient</li>
+</ul>
+<h3 id="data-formats"><strong>Data Formats</strong></h3>
+<ul>
+<li><strong>GeoJSON</strong>: Web-standard format for geographic data exchange</li>
+<li><strong>WKT (Well-Known Text)</strong>: Human-readable geometry representation</li>
+<li><strong>PostGIS Internal</strong>: Optimized binary format for database storage</li>
+</ul>
+<h2 id="integration-patterns">Integration Patterns</h2>
+<p>The workshop demonstrates how these spatial operations integrate into complete applications:</p>
+<ol>
+<li><strong>Location Services</strong>: Find nearby points of interest with distance ranking</li>
+<li><strong>Geofencing</strong>: Determine if users are within service boundaries</li>
+<li><strong>Route Analysis</strong>: Calculate paths and analyze transportation networks</li>
+<li><strong>Spatial Analytics</strong>: Generate business intelligence from geographic data</li>
+<li><strong>Data Pipeline</strong>: Import, process, and export spatial data at scale</li>
+</ol>
+<p>This completes the comprehensive PostgREST and PostGIS workshop content. The combination of PostgREST's automatic API generation with PostGIS's spatial capabilities creates a powerful platform for building location-aware applications.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

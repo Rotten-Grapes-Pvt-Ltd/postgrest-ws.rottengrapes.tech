@@ -1,0 +1,2187 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive workshop on PostgREST and PostGIS">
+      
+      
+        <meta name="author" content="Workshop Team">
+      
+      
+        <link rel="canonical" href="https://postgrest-ws.rottengrapes.tech/postgresql-intro/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../postgis-intro/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Introduction to PostgreSQL - PostgREST Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduction-to-postgresql" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PostgREST Workshop" class="md-header__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PostgREST Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Introduction to PostgreSQL
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PostgREST Workshop" class="md-nav__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    PostgREST Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is PostgreSQL?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acid-properties-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ACID Properties Explained
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ACID Properties Explained">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#atomicity-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atomicity in Action
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consistency-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consistency Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Isolation Levels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#durability-with-wal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Durability with WAL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-data-type-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Data Type System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-types-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Types in Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonb-deep-dive-with-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSONB Deep Dive with Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arrays-and-advanced-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arrays and Advanced Data Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-sql-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic SQL Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic SQL Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-tables-with-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Tables with Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inserting-sample-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inserting Sample Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#querying-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updating-and-deleting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating and Deleting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-postgresql-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced PostgreSQL Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced PostgreSQL Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#views-and-materialized-views-with-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views and Materialized Views with Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Views and Materialized Views with Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regular-views-virtual-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Views (Virtual Tables)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#materialized-views-stored-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Materialized Views (Stored Results)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-functions-with-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Functions with Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PostgreSQL Functions with Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scalar-functions-return-single-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scalar Functions (Return Single Values)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-returning-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table-Returning Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregate-and-analytics-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregate and Analytics Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-basic-table-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Basic Table Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-jsonb-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: JSONB Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-advanced-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Advanced Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-views-and-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Views and Analytics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-acid-transaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: ACID Transaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgis-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostGIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setting up PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-gis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIS with PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercise-solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution for Exercises
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is PostgreSQL?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acid-properties-explained" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ACID Properties Explained
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ACID Properties Explained">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#atomicity-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atomicity in Action
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consistency-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consistency Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isolation-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Isolation Levels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#durability-with-wal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Durability with WAL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-data-type-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Data Type System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-types-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Types in Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonb-deep-dive-with-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSONB Deep Dive with Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arrays-and-advanced-data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arrays and Advanced Data Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-sql-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic SQL Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic SQL Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-tables-with-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Tables with Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inserting-sample-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inserting Sample Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#querying-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#updating-and-deleting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Updating and Deleting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-postgresql-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced PostgreSQL Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced PostgreSQL Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#views-and-materialized-views-with-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views and Materialized Views with Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Views and Materialized Views with Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#regular-views-virtual-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regular Views (Virtual Tables)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#materialized-views-stored-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Materialized Views (Stored Results)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-functions-with-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL Functions with Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PostgreSQL Functions with Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scalar-functions-return-single-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scalar Functions (Return Single Values)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-returning-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table-Returning Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aggregate-and-analytics-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aggregate and Analytics Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Usage Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-basic-table-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Basic Table Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-jsonb-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: JSONB Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-advanced-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Advanced Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-views-and-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Views and Analytics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-acid-transaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: ACID Transaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="introduction-to-postgresql">Introduction to PostgreSQL</h1>
+<p>PostgreSQL is a powerful, open-source object-relational database system with a strong reputation for reliability, feature robustness, and performance.</p>
+<h2 id="what-is-postgresql">What is PostgreSQL?</h2>
+<p>PostgreSQL is an advanced relational database that supports both SQL (relational) and JSON (non-relational) querying. It's known for:</p>
+<ul>
+<li><strong>ACID Compliance</strong>: Ensures data integrity through Atomicity, Consistency, Isolation, Durability</li>
+<li><strong>Extensibility</strong>: Custom data types, operators, functions, and extensions</li>
+<li><strong>Standards Compliance</strong>: Follows SQL standards closely with advanced features</li>
+<li><strong>Multi-Version Concurrency Control (MVCC)</strong>: High concurrency without locking</li>
+<li><strong>Advanced Features</strong>: JSON/JSONB, full-text search, spatial data, and more</li>
+</ul>
+<h2 id="acid-properties-explained">ACID Properties Explained</h2>
+<pre class="mermaid"><code>graph TD
+    ACID["ACID Properties"]
+
+    ACID --&gt; Atomicity["Atomicity&lt;br/&gt;All or Nothing"]
+    ACID --&gt; Consistency["Consistency&lt;br/&gt;Valid State"]
+    ACID --&gt; Isolation["Isolation&lt;br/&gt;Concurrent Safety"]
+    ACID --&gt; Durability["Durability&lt;br/&gt;Permanent Storage"]
+
+    Atomicity --&gt; AtomicityEx["• Transaction succeeds completely&lt;br/&gt;• Or fails completely&lt;br/&gt;• No partial updates"]
+
+    Consistency --&gt; ConsistencyEx["• Database constraints enforced&lt;br/&gt;• Foreign keys maintained&lt;br/&gt;• Check constraints validated"]
+
+    Isolation --&gt; IsolationEx["• Concurrent transactions isolated&lt;br/&gt;• MVCC prevents conflicts&lt;br/&gt;• Multiple isolation levels"]
+
+    Durability --&gt; DurabilityEx["• Committed data survives crashes&lt;br/&gt;• Write-Ahead Logging (WAL)&lt;br/&gt;• Data persisted to disk"]
+
+    style Atomicity fill:#e3f2fd
+    style Consistency fill:#e8f5e8
+    style Isolation fill:#fff3e0
+    style Durability fill:#ffebee</code></pre>
+<h3 id="atomicity-in-action">Atomicity in Action</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Example: Bank transfer (atomic transaction)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">BEGIN</span><span class="p">;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="c1">-- Deduct from account A</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="c1">-- Add to account B</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="c1">-- Check if both accounts have sufficient funds</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="c1">-- If any account goes negative, rollback everything</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">COMMIT</span><span class="p">;</span><span class="w"> </span><span class="c1">-- or ROLLBACK;</span>
+</code></pre></div>
+<h3 id="consistency-examples">Consistency Examples</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Consistency through constraints</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">duration</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="c1">-- Consistency rule</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="n">max_participants</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">max_participants</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="n">instructor_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">instructors</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="c1">-- Foreign key consistency</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">);</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">-- This will fail due to consistency constraints</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="p">(</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">max_participants</span><span class="p">)</span><span class="w"> </span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;Bad Workshop&#39;</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">-- Violates CHECK constraints</span>
+</code></pre></div>
+<h3 id="isolation-levels">Isolation Levels</h3>
+<pre class="mermaid"><code>flowchart TD
+    IsolationLevels["PostgreSQL Isolation Levels"]
+
+    IsolationLevels --&gt; ReadUncommitted["READ UNCOMMITTED&lt;br/&gt;(Lowest isolation)"]
+    IsolationLevels --&gt; ReadCommitted["READ COMMITTED&lt;br/&gt;(Default)"]
+    IsolationLevels --&gt; RepeatableRead["REPEATABLE READ"]
+    IsolationLevels --&gt; Serializable["SERIALIZABLE&lt;br/&gt;(Highest isolation)"]
+
+    ReadUncommitted --&gt; RUProblems["Problems:&lt;br/&gt;• Dirty reads&lt;br/&gt;• Non-repeatable reads&lt;br/&gt;• Phantom reads"]
+
+    ReadCommitted --&gt; RCProblems["Problems:&lt;br/&gt;• Non-repeatable reads&lt;br/&gt;• Phantom reads"]
+
+    RepeatableRead --&gt; RRProblems["Problems:&lt;br/&gt;• Phantom reads"]
+
+    Serializable --&gt; SerializableFeatures["Features:&lt;br/&gt;• No anomalies&lt;br/&gt;• Full isolation&lt;br/&gt;• Performance cost"]
+
+    style ReadCommitted fill:#e8f5e8
+    style Serializable fill:#ffebee</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Demonstration of isolation levels</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">-- Session 1:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">BEGIN</span><span class="w"> </span><span class="k">ISOLATION</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">REPEATABLE</span><span class="w"> </span><span class="k">READ</span><span class="p">;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Returns 1000</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">-- Session 2 (concurrent):</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1500</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">COMMIT</span><span class="p">;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">-- Back to Session 1:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Still returns 1000 (repeatable read)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">COMMIT</span><span class="p">;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">-- Now check again:</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">accounts</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">-- Returns 1500</span>
+</code></pre></div>
+<h3 id="durability-with-wal">Durability with WAL</h3>
+<pre class="mermaid"><code>sequenceDiagram
+    participant App as Application
+    participant PG as PostgreSQL
+    participant WAL as WAL Buffer
+    participant Disk as Disk Storage
+
+    App-&gt;&gt;PG: INSERT/UPDATE/DELETE
+    PG-&gt;&gt;WAL: Write change to WAL buffer
+    PG-&gt;&gt;App: Operation complete (in memory)
+
+    App-&gt;&gt;PG: COMMIT
+    PG-&gt;&gt;WAL: Force WAL to disk (fsync)
+    WAL-&gt;&gt;Disk: WAL record persisted
+    PG-&gt;&gt;App: Transaction committed
+
+    Note over WAL,Disk: Even if crash occurs here,&lt;br/&gt;WAL can replay changes
+
+    PG-&gt;&gt;Disk: Background: Write data pages
+
+    %% Highlight WAL and Disk sections
+    rect #fff3e0
+      Note over WAL: WAL buffer
+    end
+
+    rect #e8f5e8
+      Note over Disk: Disk storage
+    end
+</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Check WAL settings</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">wal_level</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">fsync</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">synchronous_commit</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">-- View WAL activity</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="n">pg_current_wal_lsn</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">current_wal_position</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="n">pg_wal_lsn_diff</span><span class="p">(</span><span class="n">pg_current_wal_lsn</span><span class="p">(),</span><span class="w"> </span><span class="s1">&#39;0/0&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">wal_bytes_generated</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1">-- Force WAL sync (for testing)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">pg_switch_wal</span><span class="p">();</span>
+</code></pre></div>
+<h2 id="key-features">Key Features</h2>
+<h3 id="postgresql-data-type-system">PostgreSQL Data Type System</h3>
+<pre class="mermaid"><code>graph LR
+    DataTypes["PostgreSQL Data Types"]
+
+    DataTypes --&gt; Numeric["Numeric Types"]
+    DataTypes --&gt; String["String Types"]
+    DataTypes --&gt; DateTime["Date/Time Types"]
+    DataTypes --&gt; Boolean["Boolean"]
+    DataTypes --&gt; JSON["JSON Types"]
+    DataTypes --&gt; Array["Array Types"]
+    DataTypes --&gt; Geometric["Geometric Types"]
+    DataTypes --&gt; Network["Network Types"]
+    DataTypes --&gt; Custom["Custom Types"]
+
+    Numeric --&gt; Integer["INTEGER, BIGINT, SMALLINT"]
+    Numeric --&gt; Decimal["DECIMAL, NUMERIC"]
+    Numeric --&gt; Float["REAL, DOUBLE PRECISION"]
+    Numeric --&gt; Serial["SERIAL, BIGSERIAL"]
+
+    String --&gt; Char["CHAR, VARCHAR"]
+    String --&gt; Text["TEXT"]
+    String --&gt; Binary["BYTEA"]
+
+    DateTime --&gt; Date["DATE"]
+    DateTime --&gt; Time["TIME, TIMETZ"]
+    DateTime --&gt; Timestamp["TIMESTAMP, TIMESTAMPTZ"]
+    DateTime --&gt; Interval["INTERVAL"]
+
+    JSON --&gt; JSONB["JSONB (Binary)"]
+    JSON --&gt; JSONText["JSON (Text)"]
+
+    style JSON fill:#fff3e0
+    style Array fill:#e8f5e8
+    style Custom fill:#f3e5f5</code></pre>
+<h3 id="data-types-in-practice">Data Types in Practice</h3>
+<p>PostgreSQL supports a rich set of data types:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Comprehensive data types example</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">comprehensive_example</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="c1">-- Numeric types</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="n">small_num</span><span class="w"> </span><span class="nb">SMALLINT</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="n">regular_num</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="n">big_num</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="n">precise_num</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="n">float_num</span><span class="w"> </span><span class="nb">REAL</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="c1">-- String types</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="n">fixed_string</span><span class="w"> </span><span class="nb">CHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="n">variable_string</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="n">unlimited_text</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="c1">-- Date/Time types</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="n">birth_date</span><span class="w"> </span><span class="nb">DATE</span><span class="p">,</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="n">appointment_time</span><span class="w"> </span><span class="k">TIME</span><span class="p">,</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span><span class="n">created_at_tz</span><span class="w"> </span><span class="n">TIMESTAMPTZ</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="p">,</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="c1">-- Boolean</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="n">is_active</span><span class="w"> </span><span class="nb">BOOLEAN</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">    </span><span class="c1">-- JSON types</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">    </span><span class="n">metadata</span><span class="w"> </span><span class="n">JSON</span><span class="p">,</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">    </span><span class="n">structured_data</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">    </span><span class="c1">-- Array types</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">    </span><span class="n">tags</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">[],</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">    </span><span class="n">scores</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">[],</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">    </span><span class="c1">-- Network types</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">    </span><span class="n">ip_address</span><span class="w"> </span><span class="n">INET</span><span class="p">,</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">    </span><span class="n">mac_address</span><span class="w"> </span><span class="n">MACADDR</span><span class="p">,</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">    </span><span class="c1">-- Geometric types (basic)</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">    </span><span class="k">location</span><span class="w"> </span><span class="n">POINT</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="p">);</span>
+</code></pre></div>
+<h3 id="jsonb-deep-dive-with-examples">JSONB Deep Dive with Examples</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- Create table for JSONB examples</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">username</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="n">profile</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">);</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1">-- Insert sample JSONB data</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">profile</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">(</span><span class="s1">&#39;john_doe&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">    &quot;name&quot;: &quot;John Doe&quot;,</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s1">    &quot;age&quot;: 30,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s1">    &quot;skills&quot;: [&quot;SQL&quot;, &quot;Python&quot;, &quot;JavaScript&quot;],</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">    &quot;experience&quot;: {</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s1">        &quot;years&quot;: 5,</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s1">        &quot;level&quot;: &quot;senior&quot;,</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">        &quot;domains&quot;: [&quot;web&quot;, &quot;data&quot;]</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s1">    },</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s1">    &quot;preferences&quot;: {</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s1">        &quot;workshop_types&quot;: [&quot;technical&quot;, &quot;hands-on&quot;],</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s1">        &quot;max_duration&quot;: 240</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s1">    }</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="s1">}&#39;</span><span class="p">),</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">(</span><span class="s1">&#39;jane_smith&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="s1">    &quot;name&quot;: &quot;Jane Smith&quot;,</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="s1">    &quot;age&quot;: 28,</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="s1">    &quot;skills&quot;: [&quot;Java&quot;, &quot;Spring&quot;, &quot;Docker&quot;],</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="s1">    &quot;experience&quot;: {</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="s1">        &quot;years&quot;: 3,</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="s1">        &quot;level&quot;: &quot;intermediate&quot;,</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="s1">        &quot;domains&quot;: [&quot;backend&quot;, &quot;devops&quot;]</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="s1">    },</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="s1">    &quot;preferences&quot;: {</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="s1">        &quot;workshop_types&quot;: [&quot;technical&quot;],</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="s1">        &quot;max_duration&quot;: 180</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="s1">    }</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="s1">}&#39;</span><span class="p">),</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="p">(</span><span class="s1">&#39;bob_wilson&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="s1">    &quot;name&quot;: &quot;Bob Wilson&quot;,</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="s1">    &quot;age&quot;: 35,</span>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="s1">    &quot;skills&quot;: [&quot;Management&quot;, &quot;Strategy&quot;, &quot;Analytics&quot;],</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="s1">    &quot;experience&quot;: {</span>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="s1">        &quot;years&quot;: 8,</span>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="s1">        &quot;level&quot;: &quot;expert&quot;,</span>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="s1">        &quot;domains&quot;: [&quot;business&quot;, &quot;leadership&quot;]</span>
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="s1">    },</span>
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="s1">    &quot;preferences&quot;: {</span>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="s1">        &quot;workshop_types&quot;: [&quot;business&quot;, &quot;general&quot;],</span>
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="s1">        &quot;max_duration&quot;: 120</span>
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="s1">    }</span>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="s1">}&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="c1">-- JSONB query examples</span>
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a><span class="c1">-- Extract specific fields</span>
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">profile</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;name&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">full_name</span><span class="p">,</span><span class="w"> </span><span class="n">profile</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;age&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_profiles</span><span class="p">;</span>
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a><span class="c1">-- Query nested objects</span>
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">profile</span><span class="o">#&gt;</span><span class="s1">&#39;{experience,level}&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">experience_level</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_profiles</span><span class="p">;</span>
+<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a>
+<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a><span class="c1">-- Filter by JSONB content</span>
+<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">profile</span><span class="w"> </span><span class="o">@&gt;</span><span class="w"> </span><span class="s1">&#39;{&quot;experience&quot;: {&quot;level&quot;: &quot;senior&quot;}}&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a>
+<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a><span class="c1">-- Check if key exists</span>
+<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">profile</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;skills&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a>
+<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a><span class="c1">-- Query arrays in JSONB</span>
+<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">profile</span><span class="o">-&gt;</span><span class="s1">&#39;skills&#39;</span><span class="w"> </span><span class="o">@&gt;</span><span class="w"> </span><span class="s1">&#39;[&quot;Python&quot;]&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a>
+<a id="__codelineno-5-70" name="__codelineno-5-70" href="#__codelineno-5-70"></a><span class="c1">-- Complex JSONB queries</span>
+<a id="__codelineno-5-71" name="__codelineno-5-71" href="#__codelineno-5-71"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-5-72" name="__codelineno-5-72" href="#__codelineno-5-72"></a><span class="w">    </span><span class="n">username</span><span class="p">,</span>
+<a id="__codelineno-5-73" name="__codelineno-5-73" href="#__codelineno-5-73"></a><span class="w">    </span><span class="n">profile</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;name&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">name</span><span class="p">,</span>
+<a id="__codelineno-5-74" name="__codelineno-5-74" href="#__codelineno-5-74"></a><span class="w">    </span><span class="n">jsonb_array_length</span><span class="p">(</span><span class="n">profile</span><span class="o">-&gt;</span><span class="s1">&#39;skills&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">skill_count</span><span class="p">,</span>
+<a id="__codelineno-5-75" name="__codelineno-5-75" href="#__codelineno-5-75"></a><span class="w">    </span><span class="n">profile</span><span class="o">#&gt;</span><span class="s1">&#39;{experience,years}&#39;</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">years_experience</span>
+<a id="__codelineno-5-76" name="__codelineno-5-76" href="#__codelineno-5-76"></a><span class="k">FROM</span><span class="w"> </span><span class="n">user_profiles</span>
+<a id="__codelineno-5-77" name="__codelineno-5-77" href="#__codelineno-5-77"></a><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">profile</span><span class="o">#&gt;</span><span class="s1">&#39;{experience,years}&#39;</span><span class="p">)::</span><span class="nb">int</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<a id="__codelineno-5-78" name="__codelineno-5-78" href="#__codelineno-5-78"></a>
+<a id="__codelineno-5-79" name="__codelineno-5-79" href="#__codelineno-5-79"></a><span class="c1">-- Update JSONB data</span>
+<a id="__codelineno-5-80" name="__codelineno-5-80" href="#__codelineno-5-80"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span>
+<a id="__codelineno-5-81" name="__codelineno-5-81" href="#__codelineno-5-81"></a><span class="k">SET</span><span class="w"> </span><span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">profile</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;{&quot;last_login&quot;: &quot;2024-01-15T10:30:00Z&quot;}&#39;</span>
+<a id="__codelineno-5-82" name="__codelineno-5-82" href="#__codelineno-5-82"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;john_doe&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-83" name="__codelineno-5-83" href="#__codelineno-5-83"></a>
+<a id="__codelineno-5-84" name="__codelineno-5-84" href="#__codelineno-5-84"></a><span class="c1">-- Add to JSONB array</span>
+<a id="__codelineno-5-85" name="__codelineno-5-85" href="#__codelineno-5-85"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span>
+<a id="__codelineno-5-86" name="__codelineno-5-86" href="#__codelineno-5-86"></a><span class="k">SET</span><span class="w"> </span><span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jsonb_set</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;{skills}&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">profile</span><span class="o">-&gt;</span><span class="s1">&#39;skills&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;[&quot;PostgreSQL&quot;]&#39;</span><span class="p">)</span>
+<a id="__codelineno-5-87" name="__codelineno-5-87" href="#__codelineno-5-87"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;john_doe&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-88" name="__codelineno-5-88" href="#__codelineno-5-88"></a>
+<a id="__codelineno-5-89" name="__codelineno-5-89" href="#__codelineno-5-89"></a><span class="c1">-- Create GIN index for fast JSONB queries</span>
+<a id="__codelineno-5-90" name="__codelineno-5-90" href="#__codelineno-5-90"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_user_profiles_gin</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">GIN</span><span class="w"> </span><span class="p">(</span><span class="n">profile</span><span class="p">);</span>
+<a id="__codelineno-5-91" name="__codelineno-5-91" href="#__codelineno-5-91"></a>
+<a id="__codelineno-5-92" name="__codelineno-5-92" href="#__codelineno-5-92"></a><span class="c1">-- Query with index</span>
+<a id="__codelineno-5-93" name="__codelineno-5-93" href="#__codelineno-5-93"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">profile</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;name&#39;</span><span class="w"> </span>
+<a id="__codelineno-5-94" name="__codelineno-5-94" href="#__codelineno-5-94"></a><span class="k">FROM</span><span class="w"> </span><span class="n">user_profiles</span><span class="w"> </span>
+<a id="__codelineno-5-95" name="__codelineno-5-95" href="#__codelineno-5-95"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">profile</span><span class="w"> </span><span class="o">@&gt;</span><span class="w"> </span><span class="s1">&#39;{&quot;preferences&quot;: {&quot;workshop_types&quot;: [&quot;technical&quot;]}}&#39;</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="arrays-and-advanced-data-types">Arrays and Advanced Data Types</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- Array columns with operations</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">labels</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">[],</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">scores</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">[],</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="n">metadata</span><span class="w"> </span><span class="n">JSONB</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">);</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1">-- Array operations</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="p">(</span><span class="n">labels</span><span class="p">,</span><span class="w"> </span><span class="n">scores</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="p">(</span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">&#39;postgresql&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;database&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sql&#39;</span><span class="p">],</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="mi">95</span><span class="p">,</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w"> </span><span class="mi">92</span><span class="p">]);</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1">-- Query array elements</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="s1">&#39;postgresql&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ANY</span><span class="p">(</span><span class="n">labels</span><span class="p">);</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">labels</span><span class="w"> </span><span class="o">@&gt;</span><span class="w"> </span><span class="nb">ARRAY</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">];</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1">-- Custom composite types</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TYPE</span><span class="w"> </span><span class="n">workshop_info</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="p">);</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">workshop_archive</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">    </span><span class="n">workshop</span><span class="w"> </span><span class="n">workshop_info</span><span class="p">,</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span><span class="n">archived_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="p">);</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="c1">-- Insert into Workshop</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">workshop_archive</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">workshop</span><span class="p">,</span><span class="w"> </span><span class="n">archived_at</span><span class="p">)</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">    </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span><span class="k">ROW</span><span class="p">(</span><span class="s1">&#39;PostgREST to API&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Krishna&#39;</span><span class="p">)::</span><span class="n">workshop_info</span><span class="p">,</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">    </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="p">);</span>
+</code></pre></div>
+<h2 id="basic-sql-operations">Basic SQL Operations</h2>
+<h3 id="creating-tables-with-constraints">Creating Tables with Constraints</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Advanced table creation with constraints</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">duration</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">480</span><span class="p">),</span><span class="w"> </span><span class="c1">-- max 8 hours</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="n">max_participants</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="n">price</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">price</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="n">category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;general&#39;</span><span class="p">,</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="c1">-- Table constraints</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">unique_title_instructor</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="p">(</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">instructor</span><span class="p">),</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">valid_category</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">category</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;general&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;technical&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;business&#39;</span><span class="p">))</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="p">);</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="c1">-- Add indexes for performance</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_workshops_category</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span><span class="p">(</span><span class="n">category</span><span class="p">);</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_workshops_duration</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span><span class="p">(</span><span class="n">duration</span><span class="p">);</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_workshops_created_at</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span><span class="p">(</span><span class="n">created_at</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="inserting-sample-data">Inserting Sample Data</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- Insert comprehensive workshop data</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="p">(</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">instructor</span><span class="p">,</span><span class="w"> </span><span class="n">max_participants</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">,</span><span class="w"> </span><span class="n">category</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">(</span><span class="s1">&#39;PostgREST Basics&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Learn the fundamentals of PostgREST API&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;John Doe&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">299</span><span class="p">.</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;technical&#39;</span><span class="p">),</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">(</span><span class="s1">&#39;Advanced PostgREST&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Deep dive into PostgREST features&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Jane Smith&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">499</span><span class="p">.</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;technical&#39;</span><span class="p">),</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">(</span><span class="s1">&#39;Database Design&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Learn proper database design principles&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">240</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bob Wilson&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="mi">399</span><span class="p">.</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;technical&#39;</span><span class="p">),</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">(</span><span class="s1">&#39;Business Analytics&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Using data for business decisions&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Alice Johnson&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">199</span><span class="p">.</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;business&#39;</span><span class="p">),</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">(</span><span class="s1">&#39;Project Management&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Agile project management fundamentals&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Mike Brown&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="mi">149</span><span class="p">.</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;business&#39;</span><span class="p">),</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">(</span><span class="s1">&#39;Introduction to SQL&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Basic SQL queries and operations&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Sarah Davis&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span><span class="w"> </span><span class="mi">249</span><span class="p">.</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;general&#39;</span><span class="p">),</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="p">(</span><span class="s1">&#39;Advanced SQL&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Complex queries and optimization&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Tom Anderson&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="mi">599</span><span class="p">.</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;technical&#39;</span><span class="p">),</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">(</span><span class="s1">&#39;Data Visualization&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Creating effective charts and graphs&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Lisa Wilson&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">179</span><span class="p">.</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;general&#39;</span><span class="p">);</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1">-- Insert participants data</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="n">workshop_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">workshops</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="n">registered_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="p">);</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="p">(</span><span class="s1">&#39;Alex Thompson&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;alex@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="p">(</span><span class="s1">&#39;Maria Garcia&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;maria@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="p">(</span><span class="s1">&#39;David Lee&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;david@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="p">(</span><span class="s1">&#39;Emma Wilson&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;emma@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="p">(</span><span class="s1">&#39;James Brown&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;james@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="p">(</span><span class="s1">&#39;Sophie Chen&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sophie@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="p">(</span><span class="s1">&#39;Michael Davis&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;michael@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="p">(</span><span class="s1">&#39;Rachel Green&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rachel@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">),</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="p">(</span><span class="s1">&#39;Kevin Park&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;kevin@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">),</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="p">(</span><span class="s1">&#39;Laura Martinez&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;laura@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="querying-data">Querying Data</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- Basic SELECT</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1">-- Filtering</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">120</span><span class="p">;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">-- Ordering</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="updating-and-deleting">Updating and Deleting</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- Update</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">UPDATE</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">150</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;PostgREST Basics&#39;</span><span class="p">;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">-- Delete</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">DELETE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="advanced-postgresql-features">Advanced PostgreSQL Features</h2>
+<h3 id="views-and-materialized-views-with-examples">Views and Materialized Views with Examples</h3>
+<h4 id="regular-views-virtual-tables">Regular Views (Virtual Tables)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- Create workshop summary view</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">workshop_summary</span><span class="w"> </span><span class="k">AS</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="n">duration</span><span class="p">,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="n">price</span><span class="p">,</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="n">category</span><span class="p">,</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="k">CASE</span><span class="w"> </span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">60</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Short&#39;</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">120</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Medium&#39;</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">        </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">&#39;Long&#39;</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">duration_category</span><span class="p">,</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="n">ROUND</span><span class="p">(</span><span class="n">duration</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">60</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">duration_hours</span><span class="p">,</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">    </span><span class="k">CASE</span><span class="w"> </span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Budget&#39;</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">400</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Standard&#39;</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">        </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">&#39;Premium&#39;</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">price_tier</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">;</span>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="c1">-- Query the view</span>
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshop_summary</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">duration_category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Long&#39;</span><span class="p">;</span>
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">instructor</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">workshop_count</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshop_summary</span><span class="w"> </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">instructor</span><span class="p">;</span>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="c1">-- Create detailed workshop view with participant count</span>
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">workshop_details</span><span class="w"> </span><span class="k">AS</span>
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span>
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="p">,</span>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">max_participants</span><span class="p">,</span>
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a><span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">current_participants</span><span class="p">,</span>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">max_participants</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">available_spots</span><span class="p">,</span>
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a><span class="w">    </span><span class="n">ROUND</span><span class="p">((</span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)::</span><span class="nb">DECIMAL</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">max_participants</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">fill_percentage</span>
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">max_participants</span><span class="p">;</span>
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a><span class="c1">-- Query workshop details</span>
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">current_participants</span><span class="p">,</span><span class="w"> </span><span class="n">available_spots</span><span class="p">,</span><span class="w"> </span><span class="n">fill_percentage</span><span class="w"> </span>
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a><span class="k">FROM</span><span class="w"> </span><span class="n">workshop_details</span><span class="w"> </span>
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">fill_percentage</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre></div>
+<h4 id="materialized-views-stored-results">Materialized Views (Stored Results)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- Create materialized view for workshop statistics</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">workshop_stats_mv</span><span class="w"> </span><span class="k">AS</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">category</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">workshop_count</span><span class="p">,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="n">ROUND</span><span class="p">(</span><span class="k">AVG</span><span class="p">(</span><span class="n">duration</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_duration</span><span class="p">,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="k">MIN</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">min_duration</span><span class="p">,</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="k">MAX</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">max_duration</span><span class="p">,</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_duration</span><span class="p">,</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="n">ROUND</span><span class="p">(</span><span class="k">AVG</span><span class="p">(</span><span class="n">price</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_price</span><span class="p">,</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="k">MIN</span><span class="p">(</span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">min_price</span><span class="p">,</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="k">MAX</span><span class="p">(</span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">max_price</span><span class="p">,</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">max_participants</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_capacity</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">category</span><span class="p">;</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="c1">-- Create index on materialized view for better performance</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_workshop_stats_category</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshop_stats_mv</span><span class="p">(</span><span class="n">category</span><span class="p">);</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="c1">-- Query materialized view</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshop_stats_mv</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">workshop_count</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="c1">-- Create instructor performance materialized view</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">instructor_performance_mv</span><span class="w"> </span><span class="k">AS</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">workshops_taught</span><span class="p">,</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_participants</span><span class="p">,</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">    </span><span class="n">ROUND</span><span class="p">(</span><span class="k">AVG</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_workshop_duration</span><span class="p">,</span>
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">    </span><span class="n">ROUND</span><span class="p">(</span><span class="k">AVG</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">avg_workshop_price</span><span class="p">,</span>
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">    </span><span class="n">STRING_AGG</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">categories_taught</span>
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">;</span>
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a><span class="c1">-- Query instructor performance</span>
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">instructor_performance_mv</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">total_participants</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a><span class="c1">-- Refresh materialized views (run when underlying data changes)</span>
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a><span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">workshop_stats_mv</span><span class="p">;</span>
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a><span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">instructor_performance_mv</span><span class="p">;</span>
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a><span class="c1">-- Refresh concurrently (allows queries during refresh)</span>
+<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a><span class="n">REFRESH</span><span class="w"> </span><span class="n">MATERIALIZED</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">CONCURRENTLY</span><span class="w"> </span><span class="n">workshop_stats_mv</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="postgresql-functions-with-examples">PostgreSQL Functions with Examples</h3>
+<h4 id="scalar-functions-return-single-values">Scalar Functions (Return Single Values)</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- Simple scalar function</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">get_workshop_count</span><span class="p">()</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">BEGIN</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">);</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1">-- Test the function</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">get_workshop_count</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_workshops</span><span class="p">;</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1">-- Function with parameters</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">get_workshop_revenue</span><span class="p">(</span><span class="n">category_filter</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">NULL</span><span class="p">)</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="k">RETURNS</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="k">DECLARE</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">    </span><span class="n">total_revenue</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="k">BEGIN</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)),</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">    </span><span class="k">INTO</span><span class="w"> </span><span class="n">total_revenue</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">    </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">category_filter</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">category_filter</span><span class="p">)</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">total_revenue</span><span class="p">;</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="c1">-- Test revenue function</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">get_workshop_revenue</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_revenue</span><span class="p">;</span>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">get_workshop_revenue</span><span class="p">(</span><span class="s1">&#39;technical&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">technical_revenue</span><span class="p">;</span>
+</code></pre></div>
+<h4 id="table-returning-functions">Table-Returning Functions</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1">-- Function returning workshop data</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">get_workshops_by_duration</span><span class="p">(</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="n">min_duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="n">max_duration</span><span class="w"> </span><span class="nb">INTEGER</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="p">)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="n">workshop_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">    </span><span class="n">participant_count</span><span class="w"> </span><span class="nb">BIGINT</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="k">BEGIN</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">        </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">    </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="n">min_duration</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">max_duration</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">;</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="c1">-- Test table function</span>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">get_workshops_by_duration</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="c1">-- Advanced function with complex logic</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">get_popular_workshops</span><span class="p">(</span><span class="n">min_participants</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="w">    </span><span class="n">workshop_title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="w">    </span><span class="n">instructor_name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a><span class="w">    </span><span class="n">participant_count</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="w">    </span><span class="n">revenue</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a><span class="w">    </span><span class="n">popularity_rank</span><span class="w"> </span><span class="nb">INTEGER</span>
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a><span class="k">BEGIN</span>
+<a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="n">workshop_popularity</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a><span class="w">        </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-14-45" name="__codelineno-14-45" href="#__codelineno-14-45"></a><span class="w">            </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-14-46" name="__codelineno-14-46" href="#__codelineno-14-46"></a><span class="w">            </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-14-47" name="__codelineno-14-47" href="#__codelineno-14-47"></a><span class="w">            </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">participants</span><span class="p">,</span>
+<a id="__codelineno-14-48" name="__codelineno-14-48" href="#__codelineno-14-48"></a><span class="w">            </span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">workshop_revenue</span><span class="p">,</span>
+<a id="__codelineno-14-49" name="__codelineno-14-49" href="#__codelineno-14-49"></a><span class="w">            </span><span class="n">RANK</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">rank</span>
+<a id="__codelineno-14-50" name="__codelineno-14-50" href="#__codelineno-14-50"></a><span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-14-51" name="__codelineno-14-51" href="#__codelineno-14-51"></a><span class="w">        </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-14-52" name="__codelineno-14-52" href="#__codelineno-14-52"></a><span class="w">        </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">price</span>
+<a id="__codelineno-14-53" name="__codelineno-14-53" href="#__codelineno-14-53"></a><span class="w">        </span><span class="k">HAVING</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">min_participants</span>
+<a id="__codelineno-14-54" name="__codelineno-14-54" href="#__codelineno-14-54"></a><span class="w">    </span><span class="p">)</span>
+<a id="__codelineno-14-55" name="__codelineno-14-55" href="#__codelineno-14-55"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-14-56" name="__codelineno-14-56" href="#__codelineno-14-56"></a><span class="w">        </span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-14-57" name="__codelineno-14-57" href="#__codelineno-14-57"></a><span class="w">        </span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-14-58" name="__codelineno-14-58" href="#__codelineno-14-58"></a><span class="w">        </span><span class="n">participants</span><span class="p">,</span>
+<a id="__codelineno-14-59" name="__codelineno-14-59" href="#__codelineno-14-59"></a><span class="w">        </span><span class="n">workshop_revenue</span><span class="p">,</span>
+<a id="__codelineno-14-60" name="__codelineno-14-60" href="#__codelineno-14-60"></a><span class="w">        </span><span class="n">rank</span><span class="p">::</span><span class="nb">INTEGER</span>
+<a id="__codelineno-14-61" name="__codelineno-14-61" href="#__codelineno-14-61"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshop_popularity</span>
+<a id="__codelineno-14-62" name="__codelineno-14-62" href="#__codelineno-14-62"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">rank</span><span class="p">;</span>
+<a id="__codelineno-14-63" name="__codelineno-14-63" href="#__codelineno-14-63"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-14-64" name="__codelineno-14-64" href="#__codelineno-14-64"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-14-65" name="__codelineno-14-65" href="#__codelineno-14-65"></a>
+<a id="__codelineno-14-66" name="__codelineno-14-66" href="#__codelineno-14-66"></a><span class="c1">-- Test popular workshops function</span>
+<a id="__codelineno-14-67" name="__codelineno-14-67" href="#__codelineno-14-67"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">get_popular_workshops</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</code></pre></div>
+<h4 id="aggregate-and-analytics-functions">Aggregate and Analytics Functions</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- Comprehensive metrics function</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">calculate_workshop_metrics</span><span class="p">()</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="n">total_workshops</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="n">total_participants</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="n">avg_duration</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">,</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="n">total_hours</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">,</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="n">categories_count</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="n">avg_price</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">,</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="n">total_revenue</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">,</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span><span class="n">avg_participants_per_workshop</span><span class="w"> </span><span class="nb">NUMERIC</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="k">BEGIN</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">        </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">)::</span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">        </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)::</span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">        </span><span class="n">ROUND</span><span class="p">(</span><span class="k">AVG</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">        </span><span class="n">ROUND</span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">60</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="w">        </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">category</span><span class="p">)::</span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="w">        </span><span class="n">ROUND</span><span class="p">(</span><span class="k">AVG</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">        </span><span class="n">ROUND</span><span class="p">(</span><span class="k">SUM</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">participant_counts</span><span class="p">.</span><span class="k">count</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="w">        </span><span class="n">ROUND</span><span class="p">(</span><span class="k">AVG</span><span class="p">(</span><span class="n">participant_counts</span><span class="p">.</span><span class="k">count</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="w">    </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="w">    </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a><span class="w">        </span><span class="k">SELECT</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">count</span>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a><span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="n">participants</span>
+<a id="__codelineno-15-29" name="__codelineno-15-29" href="#__codelineno-15-29"></a><span class="w">        </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">workshop_id</span>
+<a id="__codelineno-15-30" name="__codelineno-15-30" href="#__codelineno-15-30"></a><span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="n">participant_counts</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">participant_counts</span><span class="p">.</span><span class="n">workshop_id</span><span class="p">;</span>
+<a id="__codelineno-15-31" name="__codelineno-15-31" href="#__codelineno-15-31"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-15-32" name="__codelineno-15-32" href="#__codelineno-15-32"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-15-33" name="__codelineno-15-33" href="#__codelineno-15-33"></a>
+<a id="__codelineno-15-34" name="__codelineno-15-34" href="#__codelineno-15-34"></a><span class="c1">-- Test metrics function</span>
+<a id="__codelineno-15-35" name="__codelineno-15-35" href="#__codelineno-15-35"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">calculate_workshop_metrics</span><span class="p">();</span>
+<a id="__codelineno-15-36" name="__codelineno-15-36" href="#__codelineno-15-36"></a>
+<a id="__codelineno-15-37" name="__codelineno-15-37" href="#__codelineno-15-37"></a><span class="c1">-- Function with conditional logic</span>
+<a id="__codelineno-15-38" name="__codelineno-15-38" href="#__codelineno-15-38"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">get_workshop_recommendations</span><span class="p">(</span><span class="n">user_category</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;general&#39;</span><span class="p">)</span>
+<a id="__codelineno-15-39" name="__codelineno-15-39" href="#__codelineno-15-39"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-15-40" name="__codelineno-15-40" href="#__codelineno-15-40"></a><span class="w">    </span><span class="n">recommended_title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-15-41" name="__codelineno-15-41" href="#__codelineno-15-41"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-15-42" name="__codelineno-15-42" href="#__codelineno-15-42"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-15-43" name="__codelineno-15-43" href="#__codelineno-15-43"></a><span class="w">    </span><span class="n">price</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<a id="__codelineno-15-44" name="__codelineno-15-44" href="#__codelineno-15-44"></a><span class="w">    </span><span class="n">available_spots</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-15-45" name="__codelineno-15-45" href="#__codelineno-15-45"></a><span class="w">    </span><span class="n">recommendation_reason</span><span class="w"> </span><span class="nb">TEXT</span>
+<a id="__codelineno-15-46" name="__codelineno-15-46" href="#__codelineno-15-46"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-15-47" name="__codelineno-15-47" href="#__codelineno-15-47"></a><span class="k">BEGIN</span>
+<a id="__codelineno-15-48" name="__codelineno-15-48" href="#__codelineno-15-48"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-15-49" name="__codelineno-15-49" href="#__codelineno-15-49"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-15-50" name="__codelineno-15-50" href="#__codelineno-15-50"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-15-51" name="__codelineno-15-51" href="#__codelineno-15-51"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-15-52" name="__codelineno-15-52" href="#__codelineno-15-52"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span>
+<a id="__codelineno-15-53" name="__codelineno-15-53" href="#__codelineno-15-53"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="p">,</span>
+<a id="__codelineno-15-54" name="__codelineno-15-54" href="#__codelineno-15-54"></a><span class="w">        </span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">max_participants</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">participant_counts</span><span class="p">.</span><span class="k">count</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">))::</span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-15-55" name="__codelineno-15-55" href="#__codelineno-15-55"></a><span class="w">        </span><span class="k">CASE</span><span class="w"> </span>
+<a id="__codelineno-15-56" name="__codelineno-15-56" href="#__codelineno-15-56"></a><span class="w">            </span><span class="k">WHEN</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_category</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Matches your preferred category&#39;</span>
+<a id="__codelineno-15-57" name="__codelineno-15-57" href="#__codelineno-15-57"></a><span class="w">            </span><span class="k">WHEN</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">price</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">250</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Budget-friendly option&#39;</span>
+<a id="__codelineno-15-58" name="__codelineno-15-58" href="#__codelineno-15-58"></a><span class="w">            </span><span class="k">WHEN</span><span class="w"> </span><span class="n">participant_counts</span><span class="p">.</span><span class="k">count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="s1">&#39;Popular choice&#39;</span>
+<a id="__codelineno-15-59" name="__codelineno-15-59" href="#__codelineno-15-59"></a><span class="w">            </span><span class="k">ELSE</span><span class="w"> </span><span class="s1">&#39;Available workshop&#39;</span>
+<a id="__codelineno-15-60" name="__codelineno-15-60" href="#__codelineno-15-60"></a><span class="w">        </span><span class="k">END</span>
+<a id="__codelineno-15-61" name="__codelineno-15-61" href="#__codelineno-15-61"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-15-62" name="__codelineno-15-62" href="#__codelineno-15-62"></a><span class="w">    </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-15-63" name="__codelineno-15-63" href="#__codelineno-15-63"></a><span class="w">        </span><span class="k">SELECT</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">count</span>
+<a id="__codelineno-15-64" name="__codelineno-15-64" href="#__codelineno-15-64"></a><span class="w">        </span><span class="k">FROM</span><span class="w"> </span><span class="n">participants</span>
+<a id="__codelineno-15-65" name="__codelineno-15-65" href="#__codelineno-15-65"></a><span class="w">        </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">workshop_id</span>
+<a id="__codelineno-15-66" name="__codelineno-15-66" href="#__codelineno-15-66"></a><span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="n">participant_counts</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">participant_counts</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-15-67" name="__codelineno-15-67" href="#__codelineno-15-67"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">max_participants</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">participant_counts</span><span class="p">.</span><span class="k">count</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-15-68" name="__codelineno-15-68" href="#__codelineno-15-68"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span>
+<a id="__codelineno-15-69" name="__codelineno-15-69" href="#__codelineno-15-69"></a><span class="w">        </span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_category</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">END</span><span class="p">,</span>
+<a id="__codelineno-15-70" name="__codelineno-15-70" href="#__codelineno-15-70"></a><span class="w">        </span><span class="n">participant_counts</span><span class="p">.</span><span class="k">count</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="n">NULLS</span><span class="w"> </span><span class="k">LAST</span><span class="p">;</span>
+<a id="__codelineno-15-71" name="__codelineno-15-71" href="#__codelineno-15-71"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-15-72" name="__codelineno-15-72" href="#__codelineno-15-72"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-15-73" name="__codelineno-15-73" href="#__codelineno-15-73"></a>
+<a id="__codelineno-15-74" name="__codelineno-15-74" href="#__codelineno-15-74"></a><span class="c1">-- Test recommendation function</span>
+<a id="__codelineno-15-75" name="__codelineno-15-75" href="#__codelineno-15-75"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">get_workshop_recommendations</span><span class="p">(</span><span class="s1">&#39;technical&#39;</span><span class="p">);</span>
+<a id="__codelineno-15-76" name="__codelineno-15-76" href="#__codelineno-15-76"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">get_workshop_recommendations</span><span class="p">(</span><span class="s1">&#39;business&#39;</span><span class="p">);</span>
+</code></pre></div>
+<h4 id="function-usage-examples">Function Usage Examples</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1">-- Using functions in queries</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="s1">&#39;Total Workshops: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">get_workshop_count</span><span class="p">()</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">summary</span><span class="p">;</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1">-- Using table functions with additional filtering</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">,</span><span class="w"> </span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">participant_count</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="k">FROM</span><span class="w"> </span><span class="n">get_workshops_by_duration</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="w"> </span><span class="mi">240</span><span class="p">)</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">participant_count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1">-- Combining function results</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">    </span><span class="n">m</span><span class="p">.</span><span class="n">total_workshops</span><span class="p">,</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="w">    </span><span class="n">m</span><span class="p">.</span><span class="n">total_participants</span><span class="p">,</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="w">    </span><span class="n">m</span><span class="p">.</span><span class="n">avg_duration</span><span class="p">,</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="w">    </span><span class="n">m</span><span class="p">.</span><span class="n">total_revenue</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="k">FROM</span><span class="w"> </span><span class="n">calculate_workshop_metrics</span><span class="p">()</span><span class="w"> </span><span class="n">m</span><span class="p">;</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a><span class="c1">-- Using functions in WHERE clauses</span>
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">instructor</span>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span>
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">workshop_id</span><span class="w"> </span>
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">get_workshops_by_duration</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="mi">300</span><span class="p">)</span>
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">participant_count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span>
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="p">);</span>
+</code></pre></div>
+<h2 id="exercises">Exercises</h2>
+<h3 id="exercise-1-basic-table-operations">Exercise 1: Basic Table Operations</h3>
+<p>Create a table called <code>instructors</code> with the following requirements:</p>
+<ul>
+<li><code>id</code> (auto-incrementing primary key)</li>
+<li><code>name</code> (required, max 100 characters)</li>
+<li><code>email</code> (unique, required)</li>
+<li><code>specialization</code> (one of: 'database', 'web', 'mobile', 'data-science')</li>
+<li><code>years_experience</code> (must be positive)</li>
+<li><code>hourly_rate</code> (decimal, must be &gt;= 50)</li>
+<li><code>created_at</code> (timestamp, defaults to current time)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">-- Your solution here</span>
+</code></pre></div>
+<h3 id="exercise-2-jsonb-practice">Exercise 2: JSONB Practice</h3>
+<p>Create a table <code>workshop_feedback</code> with columns:</p>
+<ul>
+<li><code>id</code> (primary key)</li>
+<li><code>workshop_id</code> (references workshops)</li>
+<li><code>participant_email</code> (varchar)</li>
+<li><code>feedback</code> (JSONB containing rating, comments, suggestions)</li>
+</ul>
+<p>Insert sample feedback and write queries to:</p>
+<ol>
+<li>Find all feedback with rating &gt; 4</li>
+<li>Get average rating per workshop</li>
+<li>Find workshops mentioned in suggestions</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- Your solution here</span>
+</code></pre></div>
+<h3 id="exercise-3-advanced-functions">Exercise 3: Advanced Functions</h3>
+<p>Write a function <code>get_instructor_workload(instructor_name VARCHAR)</code> that returns:</p>
+<ul>
+<li>Total workshops taught</li>
+<li>Total hours taught</li>
+<li>Average workshop rating (from feedback)</li>
+<li>Total revenue generated</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">-- Your solution here</span>
+</code></pre></div>
+<h3 id="exercise-4-views-and-analytics">Exercise 4: Views and Analytics</h3>
+<p>Create a materialized view <code>monthly_workshop_stats</code> that shows:</p>
+<ul>
+<li>Month/year</li>
+<li>Number of workshops</li>
+<li>Total participants</li>
+<li>Revenue</li>
+<li>Most popular category</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1">-- Your solution here</span>
+</code></pre></div>
+<h3 id="exercise-5-acid-transaction">Exercise 5: ACID Transaction</h3>
+<p>Write a transaction that:</p>
+<ol>
+<li>Creates a new workshop</li>
+<li>Assigns an instructor</li>
+<li>Registers 3 participants</li>
+<li>Updates instructor's total workshops count</li>
+<li>Ensures all operations succeed or fail together</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1">-- Your solution here</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

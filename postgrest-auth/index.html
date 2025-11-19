@@ -1,0 +1,1938 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive workshop on PostgREST and PostGIS">
+      
+      
+        <meta name="author" content="Workshop Team">
+      
+      
+        <link rel="canonical" href="https://postgrest-ws.rottengrapes.tech/postgrest-auth/">
+      
+      
+        <link rel="prev" href="../postgrest-setup/">
+      
+      
+        <link rel="next" href="../postgrest-functions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Advanced Authentication - PostgREST Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#advanced-postgrest-authentication" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PostgREST Workshop" class="md-header__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PostgREST Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Advanced Authentication
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PostgREST Workshop" class="md-nav__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    PostgREST Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgis-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostGIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setting up PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Authentication
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#jwt-authentication-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT Authentication Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-setup-for-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Setup for Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Setup for Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-authentication-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Authentication Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-database-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Database Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jwt-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="JWT Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-postgrest-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update PostgREST Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#password-hashing-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Hashing Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-registration-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Registration Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-function-with-jwt-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login Function with JWT Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-user-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current User Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#row-level-security-rls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Row Level Security (RLS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Row Level Security (RLS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-rls-on-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable RLS on Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-rls-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create RLS Policies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create RLS Policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workshop-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#participant-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Participant Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-authentication-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using the Authentication API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using the Authentication API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register-a-new-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register a New User
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#making-authenticated-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Making Authenticated Requests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-current-user-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Current User Info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-authentication-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Authentication Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Authentication Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refresh-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refresh Tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#password-reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Reset
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-user-registration-and-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: User Registration and Login
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-role-based-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: Role-Based Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-jwt-token-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: JWT Token Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-advanced-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Advanced Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-security-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Security Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-gis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIS with PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercise-solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution for Exercises
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#jwt-authentication-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT Authentication Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-setup-for-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Setup for Authentication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Setup for Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-authentication-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Authentication Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-database-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Database Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jwt-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="JWT Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-postgrest-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update PostgREST Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authentication-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authentication Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#password-hashing-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Hashing Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-registration-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Registration Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-function-with-jwt-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login Function with JWT Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-user-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current User Function
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#row-level-security-rls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Row Level Security (RLS)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Row Level Security (RLS)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-rls-on-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable RLS on Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-rls-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create RLS Policies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create RLS Policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workshop-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#participant-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Participant Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-authentication-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using the Authentication API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Using the Authentication API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register-a-new-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register a New User
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#making-authenticated-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Making Authenticated Requests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-current-user-info" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Current User Info
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-authentication-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Authentication Features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Authentication Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#refresh-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refresh Tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#password-reset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password Reset
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-user-registration-and-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: User Registration and Login
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-role-based-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: Role-Based Access Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-jwt-token-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: JWT Token Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-advanced-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Advanced Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-security-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Security Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="advanced-postgrest-authentication">Advanced PostgREST Authentication</h1>
+<p>PostgREST uses JWT (JSON Web Tokens) for authentication and PostgreSQL's Row Level Security (RLS) for authorization. This section covers comprehensive authentication setup.</p>
+<h2 id="jwt-authentication-overview">JWT Authentication Overview</h2>
+<p>PostgREST authentication works through:</p>
+<ol>
+<li><strong>JWT Tokens</strong> - Contain user claims and roles</li>
+<li><strong>Database Roles</strong> - Map to JWT roles for permissions</li>
+<li><strong>Row Level Security</strong> - Fine-grained access control</li>
+<li><strong>Custom Functions</strong> - Handle login/signup logic</li>
+</ol>
+<h2 id="database-setup-for-authentication">Database Setup for Authentication</h2>
+<h3 id="create-authentication-schema">Create Authentication Schema</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Create auth schema</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">auth</span><span class="p">;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">-- Create users table</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="n">password_hash</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="k">role</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;user&#39;</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="n">active</span><span class="w"> </span><span class="nb">BOOLEAN</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">);</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1">-- Create sessions table (optional, for session management)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">sessions</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">gen_random_uuid</span><span class="p">(),</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">    </span><span class="n">user_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">    </span><span class="n">expires_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;7 days&#39;</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="p">);</span>
+</code></pre></div>
+<h3 id="create-database-roles">Create Database Roles</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Create roles for different user types</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">authenticated</span><span class="w"> </span><span class="n">NOLOGIN</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">admin_user</span><span class="w"> </span><span class="n">NOLOGIN</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">regular_user</span><span class="w"> </span><span class="n">NOLOGIN</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">-- Create authenticator role (used by PostgREST)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">authenticator</span><span class="w"> </span><span class="n">NOINHERIT</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="n">PASSWORD</span><span class="w"> </span><span class="s1">&#39;workshop_auth_pass&#39;</span><span class="p">;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">-- Grant role memberships</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">GRANT</span><span class="w"> </span><span class="n">authenticated</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticator</span><span class="p">;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">GRANT</span><span class="w"> </span><span class="n">admin_user</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticator</span><span class="p">;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">GRANT</span><span class="w"> </span><span class="n">regular_user</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticator</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="set-up-permissions">Set Up Permissions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Grant schema usage</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">USAGE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">,</span><span class="w"> </span><span class="n">authenticated</span><span class="p">,</span><span class="w"> </span><span class="n">admin_user</span><span class="p">,</span><span class="w"> </span><span class="n">regular_user</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">USAGE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">auth</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">,</span><span class="w"> </span><span class="n">admin_user</span><span class="p">;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">-- Anonymous users can only access public endpoints</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">workshops</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">-- Authenticated users have broader access</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">workshops</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">participants</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">-- Admin users have full access</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">TABLES</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">admin_user</span><span class="p">;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">TABLES</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">auth</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">admin_user</span><span class="p">;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">SEQUENCES</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">admin_user</span><span class="p">;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">SEQUENCES</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="n">auth</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">admin_user</span><span class="p">;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1">-- Regular users have limited access</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">participants</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">regular_user</span><span class="p">;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">workshops</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">regular_user</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="jwt-configuration">JWT Configuration</h2>
+<h3 id="update-postgrest-configuration">Update PostgREST Configuration</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># postgrest.conf</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="na">db-uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;postgresql://authenticator:workshop_auth_pass@localhost:5432/workshop&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="na">db-schemas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;public,auth&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="na">db-anon-role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;web_anon&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># JWT Configuration</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="na">jwt-secret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;your-super-secret-jwt-key-at-least-32-characters-long&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="na">jwt-aud</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;postgrest&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Role claim key</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="na">role-claim-key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;.role&quot;</span>
+</code></pre></div>
+<h3 id="environment-variables">Environment Variables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGRST_JWT_SECRET</span><span class="o">=</span><span class="s2">&quot;your-super-secret-jwt-key-at-least-32-characters-long&quot;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGRST_JWT_AUD</span><span class="o">=</span><span class="s2">&quot;postgrest&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGRST_ROLE_CLAIM_KEY</span><span class="o">=</span><span class="s2">&quot;.role&quot;</span>
+</code></pre></div>
+<h2 id="authentication-functions">Authentication Functions</h2>
+<h3 id="password-hashing-function">Password Hashing Function</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- Install pgcrypto extension for password hashing</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">pgcrypto</span><span class="p">;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">-- Function to hash passwords</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">hash_password</span><span class="p">(</span><span class="n">password</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">BEGIN</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">crypt</span><span class="p">(</span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="n">gen_salt</span><span class="p">(</span><span class="s1">&#39;bf&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">));</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1">-- Function to verify passwords</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">verify_password</span><span class="p">(</span><span class="n">password</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w"> </span><span class="n">hash</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="k">RETURNS</span><span class="w"> </span><span class="nb">BOOLEAN</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="k">BEGIN</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">crypt</span><span class="p">(</span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="n">hash</span><span class="p">);</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="user-registration-function">User Registration Function</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">register_user</span><span class="p">(</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="n">password</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">user_role</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;regular_user&#39;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">DECLARE</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="n">new_user</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">BEGIN</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="c1">-- Check if email already exists</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">register_user</span><span class="p">.</span><span class="n">email</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Email already exists&#39;</span><span class="p">);</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="c1">-- Insert new user</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">password_hash</span><span class="p">,</span><span class="w"> </span><span class="k">role</span><span class="p">)</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">hash_password</span><span class="p">(</span><span class="n">password</span><span class="p">),</span><span class="w"> </span><span class="n">user_role</span><span class="p">)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="n">RETURNING</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">new_user</span><span class="p">;</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">        </span><span class="s1">&#39;success&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">        </span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">new_user</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">        </span><span class="s1">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">new_user</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">        </span><span class="s1">&#39;role&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">new_user</span><span class="p">.</span><span class="k">role</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="c1">-- Grant execute permission</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">register_user</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="login-function-with-jwt-generation">Login Function with JWT Generation</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Install pgjwt extension for JWT handling</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">pgjwt</span><span class="p">;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">login</span><span class="p">(</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="n">password</span><span class="w"> </span><span class="nb">TEXT</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">DECLARE</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="n">user_record</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="n">jwt_token</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">BEGIN</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="c1">-- Find user</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_record</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">login</span><span class="p">.</span><span class="n">email</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="c1">-- Check if user exists and password is correct</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">user_record</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">verify_password</span><span class="p">(</span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="n">password_hash</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Invalid credentials&#39;</span><span class="p">);</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">    </span><span class="c1">-- Generate JWT token</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">    </span><span class="n">jwt_token</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">sign</span><span class="p">(</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">        </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">            </span><span class="s1">&#39;role&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="k">role</span><span class="p">,</span>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">            </span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">            </span><span class="s1">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">            </span><span class="s1">&#39;exp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">extract</span><span class="p">(</span><span class="n">epoch</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;7 days&#39;</span><span class="p">)</span>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w">        </span><span class="p">),</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="w">        </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;app.jwt_secret&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)</span>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="w">        </span><span class="s1">&#39;token&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">jwt_token</span><span class="p">,</span>
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a><span class="w">        </span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a><span class="w">            </span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="w">            </span><span class="s1">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="w">            </span><span class="s1">&#39;role&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="k">role</span>
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="w">        </span><span class="p">)</span>
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a><span class="c1">-- Grant execute permission</span>
+<a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">login</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="current-user-function">Current User Function</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="k">current_user</span><span class="p">()</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">BEGIN</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">        </span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">        </span><span class="s1">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;email&#39;</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">        </span><span class="s1">&#39;role&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;role&#39;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">STABLE</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1">-- Grant execute permission</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="k">current_user</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">,</span><span class="w"> </span><span class="n">admin_user</span><span class="p">,</span><span class="w"> </span><span class="n">regular_user</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="row-level-security-rls">Row Level Security (RLS)</h2>
+<h3 id="enable-rls-on-tables">Enable RLS on Tables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- Enable RLS on workshops table</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">ENABLE</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">SECURITY</span><span class="p">;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1">-- Enable RLS on participants table</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">ENABLE</span><span class="w"> </span><span class="k">ROW</span><span class="w"> </span><span class="k">LEVEL</span><span class="w"> </span><span class="k">SECURITY</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="create-rls-policies">Create RLS Policies</h3>
+<h4 id="workshop-policies">Workshop Policies</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">-- Anyone can read workshops</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;workshops_select_policy&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1">-- Only authenticated users can insert workshops</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;workshops_insert_policy&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1">-- Users can only update their own workshops (if we add owner_id column)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1">-- First, add owner_id column</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">owner_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1">-- Update policy for workshops</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;workshops_update_policy&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">    </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="n">owner_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;user_id&#39;</span><span class="p">)::</span><span class="nb">integer</span><span class="p">);</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1">-- Admin can do everything</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;workshops_admin_policy&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">admin_user</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">    </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+</code></pre></div>
+<h4 id="participant-policies">Participant Policies</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- Add user_id to participants table</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">COLUMN</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">-- Users can only see their own registrations</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;participants_select_policy&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">participants</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;user_id&#39;</span><span class="p">)::</span><span class="nb">integer</span><span class="p">);</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1">-- Users can register themselves</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;participants_insert_policy&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">participants</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">INSERT</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;user_id&#39;</span><span class="p">)::</span><span class="nb">integer</span><span class="p">);</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1">-- Admin can see all participants</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">POLICY</span><span class="w"> </span><span class="ss">&quot;participants_admin_policy&quot;</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">participants</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">admin_user</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="w">    </span><span class="k">USING</span><span class="w"> </span><span class="p">(</span><span class="k">true</span><span class="p">)</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="w">    </span><span class="k">WITH</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="using-the-authentication-api">Using the Authentication API</h2>
+<h3 id="register-a-new-user">Register a New User</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/register_user&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="s1">    &quot;email&quot;: &quot;user@example.com&quot;,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s1">    &quot;password&quot;: &quot;securepassword123&quot;,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    &quot;user_role&quot;: &quot;regular_user&quot;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>Response:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">&quot;user_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;regular_user&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="login">Login</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="s1">    &quot;email&quot;: &quot;user@example.com&quot;,</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="s1">    &quot;password&quot;: &quot;securepassword123&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>Response:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">&quot;user&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;regular_user&quot;</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="p">}</span>
+</code></pre></div></p>
+<h3 id="making-authenticated-requests">Making Authenticated Requests</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Store the JWT token</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Make authenticated request</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Create workshop as authenticated user</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="s1">    &quot;title&quot;: &quot;My Workshop&quot;,</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a><span class="s1">    &quot;description&quot;: &quot;A workshop I created&quot;,</span>
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="s1">    &quot;duration&quot;: 120,</span>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="s1">    &quot;instructor&quot;: &quot;Me&quot;</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="get-current-user-info">Get Current User Info</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/current_user&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h2 id="advanced-authentication-features">Advanced Authentication Features</h2>
+<h3 id="refresh-tokens">Refresh Tokens</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">refresh_token</span><span class="p">(</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span><span class="n">refresh_token</span><span class="w"> </span><span class="n">UUID</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="p">)</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">DECLARE</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">    </span><span class="n">session_record</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">sessions</span><span class="p">;</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">    </span><span class="n">user_record</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">;</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">    </span><span class="n">new_token</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">;</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">BEGIN</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="w">    </span><span class="c1">-- Find valid session</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">session_record</span>
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">sessions</span>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refresh_token</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">expires_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">NOW</span><span class="p">();</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">session_record</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Invalid or expired refresh token&#39;</span><span class="p">);</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="w">    </span><span class="c1">-- Get user</span>
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_record</span>
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span>
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">session_record</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a>
+<a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a><span class="w">    </span><span class="c1">-- Generate new JWT</span>
+<a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a><span class="w">    </span><span class="n">new_token</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">sign</span><span class="p">(</span>
+<a id="__codelineno-18-26" name="__codelineno-18-26" href="#__codelineno-18-26"></a><span class="w">        </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-18-27" name="__codelineno-18-27" href="#__codelineno-18-27"></a><span class="w">            </span><span class="s1">&#39;role&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="k">role</span><span class="p">,</span>
+<a id="__codelineno-18-28" name="__codelineno-18-28" href="#__codelineno-18-28"></a><span class="w">            </span><span class="s1">&#39;user_id&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-18-29" name="__codelineno-18-29" href="#__codelineno-18-29"></a><span class="w">            </span><span class="s1">&#39;email&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">user_record</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+<a id="__codelineno-18-30" name="__codelineno-18-30" href="#__codelineno-18-30"></a><span class="w">            </span><span class="s1">&#39;exp&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">extract</span><span class="p">(</span><span class="n">epoch</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">now</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">interval</span><span class="w"> </span><span class="s1">&#39;7 days&#39;</span><span class="p">)</span>
+<a id="__codelineno-18-31" name="__codelineno-18-31" href="#__codelineno-18-31"></a><span class="w">        </span><span class="p">),</span>
+<a id="__codelineno-18-32" name="__codelineno-18-32" href="#__codelineno-18-32"></a><span class="w">        </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;app.jwt_secret&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)</span>
+<a id="__codelineno-18-33" name="__codelineno-18-33" href="#__codelineno-18-33"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-18-34" name="__codelineno-18-34" href="#__codelineno-18-34"></a>
+<a id="__codelineno-18-35" name="__codelineno-18-35" href="#__codelineno-18-35"></a><span class="w">    </span><span class="c1">-- Update session expiry</span>
+<a id="__codelineno-18-36" name="__codelineno-18-36" href="#__codelineno-18-36"></a><span class="w">    </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">sessions</span><span class="w"> </span>
+<a id="__codelineno-18-37" name="__codelineno-18-37" href="#__codelineno-18-37"></a><span class="w">    </span><span class="k">SET</span><span class="w"> </span><span class="n">expires_at</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;7 days&#39;</span>
+<a id="__codelineno-18-38" name="__codelineno-18-38" href="#__codelineno-18-38"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refresh_token</span><span class="p">;</span>
+<a id="__codelineno-18-39" name="__codelineno-18-39" href="#__codelineno-18-39"></a>
+<a id="__codelineno-18-40" name="__codelineno-18-40" href="#__codelineno-18-40"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">new_token</span><span class="p">);</span>
+<a id="__codelineno-18-41" name="__codelineno-18-41" href="#__codelineno-18-41"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-18-42" name="__codelineno-18-42" href="#__codelineno-18-42"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="password-reset">Password Reset</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">password_reset_tokens</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">gen_random_uuid</span><span class="p">(),</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">    </span><span class="n">user_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">    </span><span class="n">expires_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;1 hour&#39;</span><span class="p">,</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">    </span><span class="n">used</span><span class="w"> </span><span class="nb">BOOLEAN</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">false</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="p">);</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">request_password_reset</span><span class="p">(</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">TEXT</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="p">)</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="k">DECLARE</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="w">    </span><span class="n">user_record</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">;</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="w">    </span><span class="n">reset_token</span><span class="w"> </span><span class="n">UUID</span><span class="p">;</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="k">BEGIN</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="w">    </span><span class="c1">-- Find user</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_record</span>
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span>
+<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="p">.</span><span class="n">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request_password_reset</span><span class="p">.</span><span class="n">email</span><span class="p">;</span>
+<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>
+<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">user_record</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a><span class="w">        </span><span class="c1">-- Don&#39;t reveal if email exists</span>
+<a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;success&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;If email exists, reset link sent&#39;</span><span class="p">);</span>
+<a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a>
+<a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a><span class="w">    </span><span class="c1">-- Create reset token</span>
+<a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">password_reset_tokens</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+<a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a><span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">user_record</span><span class="p">.</span><span class="n">id</span><span class="p">)</span>
+<a id="__codelineno-19-29" name="__codelineno-19-29" href="#__codelineno-19-29"></a><span class="w">    </span><span class="n">RETURNING</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">reset_token</span><span class="p">;</span>
+<a id="__codelineno-19-30" name="__codelineno-19-30" href="#__codelineno-19-30"></a>
+<a id="__codelineno-19-31" name="__codelineno-19-31" href="#__codelineno-19-31"></a><span class="w">    </span><span class="c1">-- In real implementation, send email here</span>
+<a id="__codelineno-19-32" name="__codelineno-19-32" href="#__codelineno-19-32"></a>
+<a id="__codelineno-19-33" name="__codelineno-19-33" href="#__codelineno-19-33"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-19-34" name="__codelineno-19-34" href="#__codelineno-19-34"></a><span class="w">        </span><span class="s1">&#39;success&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-19-35" name="__codelineno-19-35" href="#__codelineno-19-35"></a><span class="w">        </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Password reset link sent&#39;</span><span class="p">,</span>
+<a id="__codelineno-19-36" name="__codelineno-19-36" href="#__codelineno-19-36"></a><span class="w">        </span><span class="s1">&#39;reset_token&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">reset_token</span><span class="w"> </span><span class="c1">-- Remove this in production</span>
+<a id="__codelineno-19-37" name="__codelineno-19-37" href="#__codelineno-19-37"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-19-38" name="__codelineno-19-38" href="#__codelineno-19-38"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-19-39" name="__codelineno-19-39" href="#__codelineno-19-39"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="security-best-practices">Security Best Practices</h2>
+<ol>
+<li><strong>Use Strong JWT Secrets</strong> - At least 32 characters, randomly generated</li>
+<li><strong>Set Appropriate Token Expiry</strong> - Balance security and user experience</li>
+<li><strong>Implement Rate Limiting</strong> - Prevent brute force attacks</li>
+<li><strong>Use HTTPS</strong> - Always encrypt data in transit</li>
+<li><strong>Validate Input</strong> - Sanitize all user inputs</li>
+<li><strong>Regular Security Audits</strong> - Review permissions and policies</li>
+<li><strong>Monitor Authentication</strong> - Log and alert on suspicious activity</li>
+</ol>
+<h2 id="exercises">Exercises</h2>
+<h3 id="exercise-1-user-registration-and-login">Exercise 1: User Registration and Login</h3>
+<ol>
+<li>Create the complete authentication schema and functions</li>
+<li>Register a new user with email and password</li>
+<li>Login with the created user and get JWT token</li>
+<li>Test token validation by accessing protected endpoints</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1">-- Your authentication setup here</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Your API calls here</span>
+</code></pre></div>
+<h3 id="exercise-2-role-based-access-control">Exercise 2: Role-Based Access Control</h3>
+<ol>
+<li>Create different user roles (admin, editor, viewer)</li>
+<li>Set up RLS policies for workshops table</li>
+<li>Test access control with different user roles</li>
+<li>Implement owner-based permissions</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1">-- Your RLS policies here</span>
+</code></pre></div>
+<h3 id="exercise-3-jwt-token-management">Exercise 3: JWT Token Management</h3>
+<ol>
+<li>Create a function to refresh JWT tokens</li>
+<li>Implement token expiration handling</li>
+<li>Add user profile management endpoints</li>
+<li>Create password reset functionality</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1">-- Your functions here</span>
+</code></pre></div>
+<h3 id="exercise-4-advanced-authentication">Exercise 4: Advanced Authentication</h3>
+<ol>
+<li>Implement session management with database storage</li>
+<li>Add user activity logging</li>
+<li>Create user preference storage</li>
+<li>Implement account activation via email</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1">-- Your advanced auth features here</span>
+</code></pre></div>
+<h3 id="exercise-5-security-testing">Exercise 5: Security Testing</h3>
+<ol>
+<li>Test SQL injection protection</li>
+<li>Verify RLS policy enforcement</li>
+<li>Test JWT token tampering protection</li>
+<li>Implement rate limiting for auth endpoints</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Your security tests here</span>
+</code></pre></div>
+<h2 id="next-steps">Next Steps</h2>
+<p>With authentication properly configured, let's explore how to use PostgreSQL functions with PostgREST for more complex business logic.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

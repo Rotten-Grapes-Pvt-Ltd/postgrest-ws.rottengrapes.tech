@@ -1,0 +1,1894 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive workshop on PostgREST and PostGIS">
+      
+      
+        <meta name="author" content="Workshop Team">
+      
+      
+        <link rel="canonical" href="https://postgrest-ws.rottengrapes.tech/postgrest-functions/">
+      
+      
+        <link rel="prev" href="../postgrest-auth/">
+      
+      
+        <link rel="next" href="../postgrest-gis/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Using Functions - PostgREST Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-functions-with-postgrest" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PostgREST Workshop" class="md-header__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PostgREST Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Using Functions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PostgREST Workshop" class="md-nav__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    PostgREST Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgis-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostGIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setting up PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Functions
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#function-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Basics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Function Basics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-function-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple Function Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-functions-via-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling Functions via PostgREST
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-types-and-return-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Types and Return Values
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Function Types and Return Values">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scalar-return-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scalar Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-returning-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table-Returning Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-table-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling Table Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-function-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Function Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Function Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-validation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Validation Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions-with-authentication-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions with Authentication Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions with Authentication Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-specific-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User-Specific Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling-in-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling in Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling in Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-exception-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Exception Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-prepared-statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Prepared Statements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-testing-with-pgtap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Testing with pgTAP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-basic-function-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Basic Function Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-table-returning-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: Table-Returning Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-authentication-aware-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Authentication-Aware Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-complex-business-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Complex Business Logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-performance-and-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Performance and Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-gis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIS with PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercise-solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution for Exercises
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#function-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Basics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Function Basics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-function-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple Function Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-functions-via-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling Functions via PostgREST
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-types-and-return-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Types and Return Values
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Function Types and Return Values">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#scalar-return-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scalar Return Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#table-returning-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table-Returning Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-table-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling Table Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-function-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Function Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Function Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-validation-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Validation Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#batch-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions-with-authentication-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Functions with Authentication Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions with Authentication Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-specific-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User-Specific Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling-in-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling in Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling in Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#custom-exception-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Exception Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-prepared-statements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Prepared Statements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unit-testing-with-pgtap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unit Testing with pgTAP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-basic-function-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Basic Function Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-table-returning-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: Table-Returning Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-authentication-aware-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Authentication-Aware Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-complex-business-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Complex Business Logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-performance-and-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Performance and Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="using-functions-with-postgrest">Using Functions with PostgREST</h1>
+<p>PostgreSQL functions become RPC (Remote Procedure Call) endpoints in PostgREST, allowing you to implement complex business logic and custom operations.</p>
+<h2 id="function-basics">Function Basics</h2>
+<h3 id="creating-functions">Creating Functions</h3>
+<p>PostgreSQL functions exposed through PostgREST must:
+- Be in a schema that PostgREST can access
+- Have appropriate permissions granted
+- Return JSON, a table, or a scalar value</p>
+<h3 id="simple-function-example">Simple Function Example</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Create a simple greeting function</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">hello_world</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;World&#39;</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">BEGIN</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="s1">&#39;Hello, &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;!&#39;</span><span class="p">;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1">-- Grant execute permission</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">hello_world</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="calling-functions-via-postgrest">Calling Functions via PostgREST</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Call function with parameter</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/hello_world&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;: &quot;PostgREST&quot;}&#39;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Response: &quot;Hello, PostgREST!&quot;</span>
+</code></pre></div>
+<h2 id="function-types-and-return-values">Function Types and Return Values</h2>
+<h3 id="scalar-return-values">Scalar Return Values</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Function returning a number</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">calculate_workshop_total_duration</span><span class="p">()</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">BEGIN</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">);</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">-- Function returning JSON</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">workshop_statistics</span><span class="p">()</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">BEGIN</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="s1">&#39;total_workshops&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">),</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="s1">&#39;total_duration&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">),</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">        </span><span class="s1">&#39;average_duration&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">),</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="s1">&#39;instructors&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">instructor</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">calculate_workshop_total_duration</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">workshop_statistics</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="table-returning-functions">Table-Returning Functions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Function returning a table</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">workshops_by_instructor</span><span class="p">(</span><span class="n">instructor_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="n">participant_count</span><span class="w"> </span><span class="nb">BIGINT</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">BEGIN</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">participant_count</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">instructor_name</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">workshops_by_instructor</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="calling-table-functions">Calling Table Functions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Call table-returning function</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/workshops_by_instructor&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;instructor_name&quot;: &quot;John Doe&quot;}&#39;</span>
+</code></pre></div>
+<h2 id="advanced-function-patterns">Advanced Function Patterns</h2>
+<h3 id="data-validation-functions">Data Validation Functions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- Function to validate workshop data</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">validate_workshop</span><span class="p">(</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">TEXT</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">DECLARE</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="n">errors</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">[]</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="p">;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">BEGIN</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="c1">-- Validate title</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">title</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">LENGTH</span><span class="p">(</span><span class="k">TRIM</span><span class="p">(</span><span class="n">title</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">        </span><span class="n">errors</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">array_append</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Title is required&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="k">LENGTH</span><span class="p">(</span><span class="n">title</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">        </span><span class="n">errors</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">array_append</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Title must be 200 characters or less&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="c1">-- Validate duration</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">        </span><span class="n">errors</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">array_append</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Duration must be a positive number&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">duration</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">480</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="c1">-- 8 hours max</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">        </span><span class="n">errors</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">array_append</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Duration cannot exceed 480 minutes&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">    </span><span class="c1">-- Validate instructor</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">instructor</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">LENGTH</span><span class="p">(</span><span class="k">TRIM</span><span class="p">(</span><span class="n">instructor</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">        </span><span class="n">errors</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">array_append</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Instructor is required&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">    </span><span class="c1">-- Return validation result</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">array_length</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">            </span><span class="s1">&#39;valid&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">false</span><span class="p">,</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">            </span><span class="s1">&#39;errors&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">errors</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">        </span><span class="p">);</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">    </span><span class="k">ELSE</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;valid&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">validate_workshop</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="batch-operations">Batch Operations</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- Function to register multiple participants</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">batch_register_participants</span><span class="p">(</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="n">workshop_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">participants</span><span class="w"> </span><span class="n">JSONB</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">DECLARE</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="n">participant</span><span class="w"> </span><span class="n">JSONB</span><span class="p">;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="n">success_count</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="n">error_count</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="n">errors</span><span class="w"> </span><span class="n">JSONB</span><span class="p">[]</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="p">;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">BEGIN</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">    </span><span class="c1">-- Loop through participants</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="k">FOR</span><span class="w"> </span><span class="n">participant</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">jsonb_array_elements</span><span class="p">(</span><span class="n">participants</span><span class="p">)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="n">LOOP</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">        </span><span class="k">BEGIN</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">            </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">            </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">                </span><span class="n">participant</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;name&#39;</span><span class="p">,</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">                </span><span class="n">participant</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;email&#39;</span><span class="p">,</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">                </span><span class="n">batch_register_participants</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">            </span><span class="p">);</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">            </span><span class="n">success_count</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">success_count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">        </span><span class="k">EXCEPTION</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">OTHERS</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">            </span><span class="n">error_count</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">error_count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">            </span><span class="n">errors</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">array_append</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">                </span><span class="s1">&#39;participant&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">participant</span><span class="p">,</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">                </span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">SQLERRM</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">            </span><span class="p">)::</span><span class="n">jsonb</span><span class="p">);</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">        </span><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="n">LOOP</span><span class="p">;</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="w">        </span><span class="s1">&#39;success_count&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">success_count</span><span class="p">,</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="w">        </span><span class="s1">&#39;error_count&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">error_count</span><span class="p">,</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="w">        </span><span class="s1">&#39;errors&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">errors</span>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a>
+<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">batch_register_participants</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="search-functions">Search Functions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Full-text search function</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">search_workshops</span><span class="p">(</span><span class="n">search_term</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="n">relevance</span><span class="w"> </span><span class="nb">REAL</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="k">BEGIN</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">description</span><span class="p">,</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">        </span><span class="n">ts_rank</span><span class="p">(</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">            </span><span class="n">to_tsvector</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">description</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">),</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">            </span><span class="n">plainto_tsquery</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">search_term</span><span class="p">)</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">        </span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">relevance</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">to_tsvector</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="k">COALESCE</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">description</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">)</span><span class="w"> </span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">          </span><span class="o">@@</span><span class="w"> </span><span class="n">plainto_tsquery</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">search_term</span><span class="p">)</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">relevance</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">search_workshops</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="functions-with-authentication-context">Functions with Authentication Context</h2>
+<h3 id="user-specific-functions">User-Specific Functions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- Function to get current user&#39;s registrations</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">my_registrations</span><span class="p">()</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">workshop_title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">workshop_duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="n">registered_at</span><span class="w"> </span><span class="k">TIMESTAMP</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">DECLARE</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="n">current_user_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">BEGIN</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="c1">-- Get current user ID from JWT</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="n">current_user_id</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;user_id&#39;</span><span class="p">)::</span><span class="nb">integer</span><span class="p">;</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">current_user_id</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">        </span><span class="n">RAISE</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="w"> </span><span class="s1">&#39;Authentication required&#39;</span><span class="p">;</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">        </span><span class="n">w</span><span class="p">.</span><span class="n">instructor</span><span class="p">,</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">        </span><span class="n">p</span><span class="p">.</span><span class="n">registered_at</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">    </span><span class="k">JOIN</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_user_id</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">registered_at</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">my_registrations</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="admin-functions">Admin Functions</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">-- Function to get user activity report (admin only)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">user_activity_report</span><span class="p">(</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="n">start_date</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_DATE</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;30 days&#39;</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="n">end_date</span><span class="w"> </span><span class="nb">DATE</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_DATE</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="n">user_email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="n">registrations_count</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="n">last_activity</span><span class="w"> </span><span class="k">TIMESTAMP</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">DECLARE</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="n">current_user_role</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="k">BEGIN</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="c1">-- Check if user is admin</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="n">current_user_role</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;role&#39;</span><span class="p">;</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">current_user_role</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;admin_user&#39;</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">        </span><span class="n">RAISE</span><span class="w"> </span><span class="k">EXCEPTION</span><span class="w"> </span><span class="s1">&#39;Admin access required&#39;</span><span class="p">;</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">        </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="p">,</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="w">        </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">registrations_count</span><span class="p">,</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">        </span><span class="k">MAX</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">registered_at</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">last_activity</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">auth</span><span class="p">.</span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">    </span><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">        </span><span class="k">AND</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">registered_at</span><span class="w"> </span><span class="k">BETWEEN</span><span class="w"> </span><span class="n">start_date</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">end_date</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="w">    </span><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">    </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">registrations_count</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">user_activity_report</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">admin_user</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="error-handling-in-functions">Error Handling in Functions</h2>
+<h3 id="custom-exception-handling">Custom Exception Handling</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">register_for_workshop</span><span class="p">(</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="n">workshop_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="n">participant_name</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="n">participant_email</span><span class="w"> </span><span class="nb">TEXT</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="k">DECLARE</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="n">workshop_exists</span><span class="w"> </span><span class="nb">BOOLEAN</span><span class="p">;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="n">current_user_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="k">BEGIN</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="c1">-- Get current user</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="n">current_user_id</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">current_setting</span><span class="p">(</span><span class="s1">&#39;request.jwt.claims&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)::</span><span class="n">json</span><span class="o">-&gt;&gt;</span><span class="s1">&#39;user_id&#39;</span><span class="p">)::</span><span class="nb">integer</span><span class="p">;</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">current_user_id</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Authentication required&#39;</span><span class="p">);</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">    </span><span class="c1">-- Check if workshop exists</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">workshop_exists</span><span class="p">;</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="n">workshop_exists</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Workshop not found&#39;</span><span class="p">);</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">    </span><span class="c1">-- Check if already registered</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="k">EXISTS</span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">workshop_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">register_for_workshop</span><span class="p">.</span><span class="n">workshop_id</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">current_user_id</span><span class="p">)</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Already registered for this workshop&#39;</span><span class="p">);</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="w">    </span><span class="c1">-- Register participant</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="w">    </span><span class="k">BEGIN</span>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a><span class="w">        </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p">)</span>
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="w">        </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">participant_name</span><span class="p">,</span><span class="w"> </span><span class="n">participant_email</span><span class="p">,</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">,</span><span class="w"> </span><span class="n">current_user_id</span><span class="p">);</span>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="w">            </span><span class="s1">&#39;success&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="w">            </span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Successfully registered for workshop&#39;</span>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="w">        </span><span class="p">);</span>
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="w">    </span><span class="k">EXCEPTION</span><span class="w"> </span>
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a><span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="n">unique_violation</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a><span class="w">            </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Email already registered for this workshop&#39;</span><span class="p">);</span>
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a><span class="w">        </span><span class="k">WHEN</span><span class="w"> </span><span class="n">OTHERS</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a><span class="w">            </span><span class="k">RETURN</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Registration failed: &#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">SQLERRM</span><span class="p">);</span>
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a><span class="w">    </span><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="w"> </span><span class="k">SECURITY</span><span class="w"> </span><span class="k">DEFINER</span><span class="p">;</span>
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">register_for_workshop</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">authenticated</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="performance-optimization">Performance Optimization</h2>
+<h3 id="using-prepared-statements">Using Prepared Statements</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">-- Function with prepared statement for better performance</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">get_workshops_by_duration_range</span><span class="p">(</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="n">min_duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="n">max_duration</span><span class="w"> </span><span class="nb">INTEGER</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">)</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">TABLE</span><span class="p">(</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="k">BEGIN</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="n">QUERY</span><span class="w"> </span><span class="k">EXECUTE</span><span class="w"> </span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">        </span><span class="s1">&#39;SELECT id, title, duration, instructor FROM workshops WHERE duration BETWEEN $1 AND $2 ORDER BY duration&#39;</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">    </span><span class="k">USING</span><span class="w"> </span><span class="n">min_duration</span><span class="p">,</span><span class="w"> </span><span class="n">max_duration</span><span class="p">;</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="caching-results">Caching Results</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">-- Function with simple caching mechanism</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">function_cache</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="n">cache_key</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="n">cache_value</span><span class="w"> </span><span class="n">JSONB</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="n">expires_at</span><span class="w"> </span><span class="k">TIMESTAMP</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">);</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">cached_workshop_stats</span><span class="p">()</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="k">RETURNS</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="k">DECLARE</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="n">cache_key</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="p">:</span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;workshop_stats&#39;</span><span class="p">;</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="n">cached_result</span><span class="w"> </span><span class="n">JSONB</span><span class="p">;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="k">result</span><span class="w"> </span><span class="n">JSON</span><span class="p">;</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="k">BEGIN</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="c1">-- Check cache</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">cache_value</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">cached_result</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">function_cache</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">function_cache</span><span class="p">.</span><span class="n">cache_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cached_workshop_stats</span><span class="p">.</span><span class="n">cache_key</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">      </span><span class="k">AND</span><span class="w"> </span><span class="n">expires_at</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">NOW</span><span class="p">();</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">    </span><span class="k">IF</span><span class="w"> </span><span class="n">cached_result</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">THEN</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">        </span><span class="k">RETURN</span><span class="w"> </span><span class="n">cached_result</span><span class="p">::</span><span class="n">json</span><span class="p">;</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">    </span><span class="k">END</span><span class="w"> </span><span class="k">IF</span><span class="p">;</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">    </span><span class="c1">-- Calculate fresh stats</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">    </span><span class="k">SELECT</span><span class="w"> </span><span class="n">json_build_object</span><span class="p">(</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="w">        </span><span class="s1">&#39;total_workshops&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">),</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="w">        </span><span class="s1">&#39;total_duration&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="n">duration</span><span class="p">),</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">        </span><span class="s1">&#39;average_duration&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">AVG</span><span class="p">(</span><span class="n">duration</span><span class="p">),</span>
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">        </span><span class="s1">&#39;generated_at&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="k">result</span>
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="w">    </span><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="p">;</span>
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="w">    </span><span class="c1">-- Cache result for 1 hour</span>
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="w">    </span><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">function_cache</span><span class="w"> </span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span><span class="w"> </span><span class="n">cache_value</span><span class="p">,</span><span class="w"> </span><span class="n">expires_at</span><span class="p">)</span>
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a><span class="w">    </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="n">cache_key</span><span class="p">,</span><span class="w"> </span><span class="k">result</span><span class="p">::</span><span class="n">jsonb</span><span class="p">,</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="s1">&#39;1 hour&#39;</span><span class="p">)</span>
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a><span class="w">    </span><span class="k">ON</span><span class="w"> </span><span class="n">CONFLICT</span><span class="w"> </span><span class="p">(</span><span class="n">cache_key</span><span class="p">)</span><span class="w"> </span><span class="k">DO</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span>
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a><span class="w">        </span><span class="n">cache_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EXCLUDED</span><span class="p">.</span><span class="n">cache_value</span><span class="p">,</span>
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a><span class="w">        </span><span class="n">expires_at</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EXCLUDED</span><span class="p">.</span><span class="n">expires_at</span><span class="p">;</span>
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="k">result</span><span class="p">;</span>
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+</code></pre></div>
+<h2 id="testing-functions">Testing Functions</h2>
+<h3 id="unit-testing-with-pgtap">Unit Testing with pgTAP</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1">-- Install pgTAP extension</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">EXTENSION</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">pgtap</span><span class="p">;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1">-- Test function</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">OR</span><span class="w"> </span><span class="k">REPLACE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">test_hello_world</span><span class="p">()</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">RETURNS</span><span class="w"> </span><span class="k">SETOF</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="err">$$</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">BEGIN</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="k">NEXT</span><span class="w"> </span><span class="k">is</span><span class="p">(</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">        </span><span class="n">hello_world</span><span class="p">(</span><span class="s1">&#39;Test&#39;</span><span class="p">),</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">        </span><span class="s1">&#39;Hello, Test!&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">        </span><span class="s1">&#39;hello_world should return correct greeting&#39;</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span><span class="k">RETURN</span><span class="w"> </span><span class="k">NEXT</span><span class="w"> </span><span class="k">is</span><span class="p">(</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">        </span><span class="n">hello_world</span><span class="p">(),</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">        </span><span class="s1">&#39;Hello, World!&#39;</span><span class="p">,</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">        </span><span class="s1">&#39;hello_world should use default parameter&#39;</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span><span class="p">);</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="k">END</span><span class="p">;</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="err">$$</span><span class="w"> </span><span class="k">LANGUAGE</span><span class="w"> </span><span class="n">plpgsql</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="integration-testing">Integration Testing</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Test function via API</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/workshop_statistics&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Test with parameters</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/rpc/search_workshops&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;search_term&quot;: &quot;PostgREST&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+</code></pre></div>
+<h2 id="best-practices">Best Practices</h2>
+<ol>
+<li><strong>Use SECURITY DEFINER carefully</strong> - Only when necessary for privilege escalation</li>
+<li><strong>Validate inputs</strong> - Always check parameters before processing</li>
+<li><strong>Handle exceptions</strong> - Provide meaningful error messages</li>
+<li><strong>Use appropriate return types</strong> - JSON for complex data, tables for sets</li>
+<li><strong>Grant minimal permissions</strong> - Only to roles that need access</li>
+<li><strong>Document functions</strong> - Use comments to explain complex logic</li>
+<li><strong>Test thoroughly</strong> - Unit and integration tests</li>
+<li><strong>Consider performance</strong> - Use indexes and optimize queries</li>
+</ol>
+<h2 id="exercises">Exercises</h2>
+<h3 id="exercise-1-basic-function-creation">Exercise 1: Basic Function Creation</h3>
+<ol>
+<li>Create a function <code>get_workshop_summary()</code> that returns total workshops, participants, and average rating</li>
+<li>Create a function <code>find_workshops_by_keyword(keyword TEXT)</code> for searching</li>
+<li>Test both functions via PostgREST API</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1">-- Your functions here</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Your API tests here</span>
+</code></pre></div>
+<h3 id="exercise-2-table-returning-functions">Exercise 2: Table-Returning Functions</h3>
+<ol>
+<li>Create <code>get_popular_workshops(min_participants INTEGER)</code> returning workshops with participant counts</li>
+<li>Create <code>get_instructor_schedule(instructor_name TEXT)</code> showing all workshops for an instructor</li>
+<li>Add proper error handling and validation</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1">-- Your functions here</span>
+</code></pre></div>
+<h3 id="exercise-3-authentication-aware-functions">Exercise 3: Authentication-Aware Functions</h3>
+<ol>
+<li>Create <code>my_workshop_history()</code> showing current user's past workshops</li>
+<li>Create <code>register_for_workshop(workshop_id INTEGER)</code> with user context</li>
+<li>Create admin-only function <code>get_user_statistics()</code></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1">-- Your functions here</span>
+</code></pre></div>
+<h3 id="exercise-4-complex-business-logic">Exercise 4: Complex Business Logic</h3>
+<ol>
+<li>Create <code>calculate_workshop_revenue()</code> with detailed breakdown</li>
+<li>Create <code>suggest_workshops(user_preferences JSONB)</code> recommendation engine</li>
+<li>Create <code>batch_update_workshop_status(workshop_ids INTEGER[], new_status TEXT)</code></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1">-- Your functions here</span>
+</code></pre></div>
+<h3 id="exercise-5-performance-and-caching">Exercise 5: Performance and Caching</h3>
+<ol>
+<li>Create a caching mechanism for expensive calculations</li>
+<li>Implement a function that uses prepared statements</li>
+<li>Create performance benchmarks comparing cached vs non-cached functions</li>
+<li>Add function monitoring and logging</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1">-- Your optimized functions here</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Your performance tests here</span>
+</code></pre></div>
+<h2 id="next-steps">Next Steps</h2>
+<p>Now that you understand how to use functions with PostgREST, let's explore how to combine PostgREST with PostGIS for spatial data APIs.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

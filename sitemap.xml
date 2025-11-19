@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://postgrest-ws.rottengrapes.tech/</loc>
+         <lastmod>2025-11-19</lastmod>
+    </url>
+    <url>
+         <loc>https://postgrest-ws.rottengrapes.tech/exercise-solutions/</loc>
+         <lastmod>2025-11-19</lastmod>
+    </url>
+    <url>
+         <loc>https://postgrest-ws.rottengrapes.tech/postgis-intro/</loc>
+         <lastmod>2025-11-19</lastmod>
+    </url>
+    <url>
+         <loc>https://postgrest-ws.rottengrapes.tech/postgresql-intro/</loc>
+         <lastmod>2025-11-19</lastmod>
+    </url>
+    <url>
+         <loc>https://postgrest-ws.rottengrapes.tech/postgrest-auth/</loc>
+         <lastmod>2025-11-19</lastmod>
+    </url>
+    <url>
+         <loc>https://postgrest-ws.rottengrapes.tech/postgrest-functions/</loc>
+         <lastmod>2025-11-19</lastmod>
+    </url>
+    <url>
+         <loc>https://postgrest-ws.rottengrapes.tech/postgrest-gis/</loc>
+         <lastmod>2025-11-19</lastmod>
+    </url>
+    <url>
+         <loc>https://postgrest-ws.rottengrapes.tech/postgrest-setup/</loc>
+         <lastmod>2025-11-19</lastmod>
+    </url>
+</urlset>

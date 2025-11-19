@@ -1,0 +1,2139 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive workshop on PostgREST and PostGIS">
+      
+      
+        <meta name="author" content="Workshop Team">
+      
+      
+        <link rel="canonical" href="https://postgrest-ws.rottengrapes.tech/postgrest-setup/">
+      
+      
+        <link rel="prev" href="../postgis-intro/">
+      
+      
+        <link rel="next" href="../postgrest-auth/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Setting up PostgREST - PostgREST Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#setting-up-postgrest" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PostgREST Workshop" class="md-header__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PostgREST Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Setting up PostgREST
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PostgREST Workshop" class="md-nav__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    PostgREST Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgresql-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgis-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostGIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setting up PostgREST
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setting up PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is PostgREST?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-docker-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Docker (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binary-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-anonymous-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Anonymous Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-sample-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Sample Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insert-sample-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Insert Sample Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgrest-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgREST Configuration File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-api-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic API Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic API Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting PostgREST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing the API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing the API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-all-workshops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get All Workshops
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-specific-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Specific Workshop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-new-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create New Workshop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Workshop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete Workshop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Query Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#based-on-columns-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Based on columns values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#based-on-pattern-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Based on Pattern Matching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#based-on-logical-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Based on logical operators
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limiting-and-pagination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limiting and Pagination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#column-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relationships-and-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationships and Joins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Relationships and Joins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foreign-key-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foreign Key Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-on-related-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering on Related Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#views-and-computed-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views and Computed Columns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Views and Computed Columns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-the-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query the View
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-http-status-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common HTTP Status Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-response-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Response Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-indexes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Indexes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Pooling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-basic-api-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Basic API Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-advanced-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: Advanced Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-relationships-and-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Relationships and Joins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-create-custom-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Create Custom Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-performance-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Performance Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../postgrest-gis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIS with PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exercise-solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution for Exercises
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is PostgREST?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-docker-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Docker (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#binary-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-anonymous-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Anonymous Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-sample-tables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Sample Tables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#insert-sample-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Insert Sample Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postgrest-configuration-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgREST Configuration File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-api-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic API Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Basic API Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting PostgREST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing the API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing the API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-all-workshops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get All Workshops
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-specific-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Specific Workshop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-new-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create New Workshop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#update-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Workshop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delete-workshop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete Workshop
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Query Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#based-on-columns-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Based on columns values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#based-on-pattern-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Based on Pattern Matching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#based-on-logical-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Based on logical operators
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limiting-and-pagination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limiting and Pagination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#column-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relationships-and-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationships and Joins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Relationships and Joins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foreign-key-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foreign Key Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-on-related-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering on Related Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#views-and-computed-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views and Computed Columns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Views and Computed Columns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-a-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a View
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-the-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query the View
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error Handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-http-status-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common HTTP Status Codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-response-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Response Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-indexes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Indexes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connection-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Pooling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercises
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exercises">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exercise-1-basic-api-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 1: Basic API Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-2-advanced-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 2: Advanced Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-3-relationships-and-joins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 3: Relationships and Joins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-4-create-custom-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 4: Create Custom Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exercise-5-performance-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise 5: Performance Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="setting-up-postgrest">Setting up PostgREST</h1>
+<p>PostgREST automatically generates a RESTful API from your PostgreSQL database schema. This section covers basic setup and configuration.</p>
+<h2 id="what-is-postgrest">What is PostgREST?</h2>
+<p>PostgREST is a standalone web server that turns your PostgreSQL database directly into a RESTful API. It:</p>
+<ul>
+<li><strong>Auto-generates endpoints</strong> from database tables and views</li>
+<li><strong>Handles authentication</strong> via JWT tokens</li>
+<li><strong>Supports complex queries</strong> through URL parameters</li>
+<li><strong>Provides real-time subscriptions</strong> via WebSockets</li>
+<li><strong>Follows REST conventions</strong> automatically</li>
+</ul>
+<h2 id="installation-methods">Installation Methods</h2>
+<h3 id="using-docker-recommended">Using Docker (Recommended)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Pull PostgREST image</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>docker<span class="w"> </span>pull<span class="w"> </span>postgrest/postgrest
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Run PostgREST container</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>postgrest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">3000</span>:3000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">PGRST_DB_URI</span><span class="o">=</span><span class="s2">&quot;postgresql://postgres:workshop123@host.docker.internal:5432/workshop&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">PGRST_DB_SCHEMAS</span><span class="o">=</span><span class="s2">&quot;public&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">PGRST_DB_ANON_ROLE</span><span class="o">=</span><span class="s2">&quot;web_anon&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-d<span class="w"> </span>postgrest/postgrest
+</code></pre></div>
+<h3 id="binary-installation">Binary Installation</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Download latest release</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>wget<span class="w"> </span>https://github.com/PostgREST/postgrest/releases/latest/download/postgrest-v11.2.2-linux-static-x64.tar.xz
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Extract and run</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tar<span class="w"> </span>-xf<span class="w"> </span>postgrest-v11.2.2-linux-static-x64.tar.xz
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>./postgrest<span class="w"> </span>postgrest.conf
+</code></pre></div>
+<h2 id="database-setup">Database Setup</h2>
+<h3 id="create-anonymous-roles">Create Anonymous Roles</h3>
+<p>This role will be used as default role</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Create roles for PostgREST</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">web_anon</span><span class="w"> </span><span class="n">NOLOGIN</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">-- Grant permissions</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">USAGE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">TABLES</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="n">SEQUENCES</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="k">SCHEMA</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="create-sample-tables">Create Sample Tables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Create workshops table</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">title</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">duration</span><span class="w"> </span><span class="nb">INTEGER</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="n">instructor</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="n">updated_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">);</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1">-- Create participants table</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="n">workshop_id</span><span class="w"> </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">workshops</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="n">registered_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="p">);</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1">-- Grant permissions to web_anon</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="k">grant</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">workshops</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="k">grant</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">public</span><span class="p">.</span><span class="n">participants</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="insert-sample-data">Insert Sample Data</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Insert sample workshops</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="p">(</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">description</span><span class="p">,</span><span class="w"> </span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">instructor</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">(</span><span class="s1">&#39;PostgREST Basics&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Learn the fundamentals of PostgREST API&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;John Doe&#39;</span><span class="p">),</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">(</span><span class="s1">&#39;Advanced PostgREST&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Deep dive into PostgREST features&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">180</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Jane Smith&#39;</span><span class="p">),</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">(</span><span class="s1">&#39;PostGIS Integration&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Using PostgREST with spatial data&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Bob Wilson&#39;</span><span class="p">);</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">-- Insert sample participants</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">workshop_id</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">(</span><span class="s1">&#39;Alice Johnson&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;alice@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">(</span><span class="s1">&#39;Bob Brown&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;bob@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">(</span><span class="s1">&#39;Carol Davis&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;carol@example.com&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="configuration">Configuration</h2>
+<h3 id="postgrest-configuration-file">PostgREST Configuration File</h3>
+<p>Create <code>postgrest.conf</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Database connection</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="na">db-uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;postgresql://authenticator:workshop_auth_pass@localhost:5432/workshop&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="na">db-schemas</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;public&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="na">db-anon-role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;web_anon&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Server settings</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="na">server-host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;0.0.0.0&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="na">server-port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3000</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># API settings</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="na">db-max-rows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1000</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="na">db-pool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="na">db-pool-timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+</code></pre></div>
+<h3 id="environment-variables">Environment Variables</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGRST_DB_URI</span><span class="o">=</span><span class="s2">&quot;postgresql://authenticator:workshop_auth_pass@localhost:5432/workshop&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGRST_DB_SCHEMAS</span><span class="o">=</span><span class="s2">&quot;public&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGRST_DB_ANON_ROLE</span><span class="o">=</span><span class="s2">&quot;web_anon&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">PGRST_SERVER_PORT</span><span class="o">=</span><span class="m">3000</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Remember to restart <code>PostgREST</code></p>
+<p>Whenever you add new table to the database or make change to the configuration of PostgREST, you need to restart the service</p>
+</div>
+<h2 id="basic-api-usage">Basic API Usage</h2>
+<h3 id="starting-postgrest">Starting PostgREST</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Using configuration file</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>./postgrest<span class="w"> </span>postgrest.conf
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Using environment variables</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>./postgrest
+</code></pre></div>
+<h3 id="testing-the-api">Testing the API</h3>
+<h4 id="get-all-workshops">Get All Workshops</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops&quot;</span>
+</code></pre></div>
+<p>Response:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">[</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PostgREST Basics&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Learn the fundamentals of PostgREST API&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nt">&quot;duration&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nt">&quot;instructor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-15T10:00:00&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2024-01-15T10:00:00&quot;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="p">]</span>
+</code></pre></div></p>
+<h4 id="get-specific-workshop">Get Specific Workshop</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?id=eq.1&quot;</span>
+</code></pre></div>
+<div class="admonition failure">
+<p class="admonition-title">Following APIs will not work</p>
+<p>Since you have only given <code>SELECT</code> access to the <code>web_anon</code> user you will not be able to make CREATE,UPDATE,DELETE operations</p>
+</div>
+<h4 id="create-new-workshop">Create New Workshop</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="s1">    &quot;title&quot;: &quot;New Workshop&quot;,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="s1">    &quot;description&quot;: &quot;A new workshop description&quot;,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s1">    &quot;duration&quot;: 90,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s1">    &quot;instructor&quot;: &quot;New Instructor&quot;</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h4 id="update-workshop">Update Workshop</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?id=eq.1&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;duration&quot;: 135}&#39;</span>
+</code></pre></div>
+<h4 id="delete-workshop">Delete Workshop</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?id=eq.1&quot;</span>
+</code></pre></div>
+<h2 id="query-parameters">Query Parameters</h2>
+<p>Checkout all available Filtering parameters <a href="https://docs.postgrest.org/en/v14/references/api/tables_views.html">here</a></p>
+<h3 id="filtering">Filtering</h3>
+<h4 id="based-on-columns-values">Based on columns values</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Equal</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?duration=eq.120&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Greater than</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?duration=gt.100&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Less than or equal</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?duration=lte.150&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Like (pattern matching)</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?title=like.*PostgREST*&quot;</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># In list</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?id=in.(1,2,3)&quot;</span>
+</code></pre></div>
+<h4 id="based-on-pattern-matching">Based on Pattern Matching</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Return data where title has GIS </span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>http://localhost:3000/workshops?title<span class="o">=</span>like.*GIS*
+</code></pre></div>
+<h4 id="based-on-logical-operators">Based on logical operators</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Return data where title has GIS or duration &lt; 140</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>http://localhost:3000/workshops?or<span class="o">=(</span>title.like.*GIS*,duration.lt.140<span class="o">)</span>
+</code></pre></div>
+<h3 id="ordering">Ordering</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Order by title ascending</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?order=title.asc&quot;</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Order by duration descending</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?order=duration.desc&quot;</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Multiple ordering</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?order=instructor.asc,duration.desc&quot;</span>
+</code></pre></div>
+<h3 id="limiting-and-pagination">Limiting and Pagination</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Limit results</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?limit=5&quot;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Offset (pagination)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?limit=5&amp;offset=10&quot;</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Range-based pagination</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Range: 0-4&quot;</span>
+</code></pre></div>
+<h3 id="column-selection">Column Selection</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Select specific columns</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?select=id,title,duration&quot;</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Select with relationships</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?select=title,participants(name,email)&quot;</span>
+</code></pre></div>
+<h2 id="relationships-and-joins">Relationships and Joins</h2>
+<h3 id="foreign-key-relationships">Foreign Key Relationships</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Get workshops with their participants</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?select=*,participants(*)&quot;</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Get participants with workshop details</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/participants?select=*,workshops(title,instructor)&quot;</span>
+</code></pre></div>
+<h3 id="filtering-on-related-data">Filtering on Related Data</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Get workshops that have participants</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?participants=not.is.null&amp;select=*,participants(*)&quot;</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Get participants for specific workshop</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/participants?workshops.title=eq.PostgREST%20Basics&quot;</span>
+</code></pre></div>
+<h2 id="views-and-computed-columns">Views and Computed Columns</h2>
+<h3 id="create-a-view">Create a View</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">VIEW</span><span class="w"> </span><span class="n">workshop_stats</span><span class="w"> </span><span class="k">AS</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="k">SELECT</span><span class="w"> </span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span><span class="k">COUNT</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">participant_count</span><span class="p">,</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span><span class="n">w</span><span class="p">.</span><span class="n">created_at</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">workshops</span><span class="w"> </span><span class="n">w</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">participants</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">workshop_id</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">title</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">duration</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">created_at</span><span class="p">;</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="c1">-- Grant permissions</span>
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshop_stats</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="n">web_anon</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="query-the-view">Query the View</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshop_stats&quot;</span>
+</code></pre></div>
+<h2 id="error-handling">Error Handling</h2>
+<h3 id="common-http-status-codes">Common HTTP Status Codes</h3>
+<ul>
+<li><code>200</code> - Success</li>
+<li><code>201</code> - Created</li>
+<li><code>204</code> - No Content (successful DELETE/PATCH)</li>
+<li><code>400</code> - Bad Request</li>
+<li><code>401</code> - Unauthorized</li>
+<li><code>404</code> - Not Found</li>
+<li><code>409</code> - Conflict</li>
+</ul>
+<h3 id="error-response-format">Error Response Format</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="p">{</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;23505&quot;</span><span class="p">,</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Key (email)=(test@example.com) already exists.&quot;</span><span class="p">,</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="nt">&quot;hint&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;duplicate key value violates unique constraint \&quot;participants_email_key\&quot;&quot;</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="performance-considerations">Performance Considerations</h2>
+<h3 id="database-indexes">Database Indexes</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1">-- Create indexes for frequently queried columns</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_workshops_instructor</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span><span class="p">(</span><span class="n">instructor</span><span class="p">);</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_participants_workshop_id</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">participants</span><span class="p">(</span><span class="n">workshop_id</span><span class="p">);</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_workshops_created_at</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">workshops</span><span class="p">(</span><span class="n">created_at</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="connection-pooling">Connection Pooling</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># In postgrest.conf</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="na">db-pool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">20</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="na">db-pool-timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
+</code></pre></div>
+<h3 id="query-optimization">Query Optimization</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># Use column selection to reduce payload</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?select=id,title&quot;</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="c1"># Use appropriate limits</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>curl<span class="w"> </span><span class="s2">&quot;http://localhost:3000/workshops?limit=20&quot;</span>
+</code></pre></div>
+<h2 id="exercises">Exercises</h2>
+<h3 id="exercise-1-basic-api-operations">Exercise 1: Basic API Operations</h3>
+<p>Using the workshops table:
+1. Create a new workshop via POST request
+2. Update the workshop duration using PATCH
+3. Query workshops by instructor name
+4. Delete the workshop you created</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1"># Your curl commands here</span>
+</code></pre></div>
+<h3 id="exercise-2-advanced-filtering">Exercise 2: Advanced Filtering</h3>
+<p>Write API calls to:
+1. Find workshops longer than 2 hours
+2. Get workshops created in the last 7 days
+3. Find workshops with "PostgREST" in the title
+4. Get workshops ordered by duration (shortest first)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1"># Your curl commands here</span>
+</code></pre></div>
+<h3 id="exercise-3-relationships-and-joins">Exercise 3: Relationships and Joins</h3>
+<ol>
+<li>Get all workshops with their participant count</li>
+<li>Find participants registered for "PostgREST Basics"</li>
+<li>Get workshops that have more than 1 participant</li>
+<li>List participants with their workshop titles</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="c1"># Your curl commands here</span>
+</code></pre></div>
+<h3 id="exercise-4-create-custom-views">Exercise 4: Create Custom Views</h3>
+<p>Create database views and test them:
+1. <code>popular_workshops</code> - workshops with participant count &gt; 2
+2. <code>instructor_stats</code> - instructor name with workshop count and total duration
+3. <code>recent_registrations</code> - participants registered in last 30 days</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1">-- Your SQL here</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># Your API calls here</span>
+</code></pre></div>
+<h3 id="exercise-5-performance-testing">Exercise 5: Performance Testing</h3>
+<ol>
+<li>Create 1000 sample workshops using a script</li>
+<li>Test pagination with different page sizes</li>
+<li>Compare response times with and without column selection</li>
+<li>Create appropriate indexes and measure improvement</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="c1">-- Your SQL here</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Your test commands here</span>
+</code></pre></div>
+<h2 id="next-steps">Next Steps</h2>
+<p>Now that you have PostgREST running with basic functionality, let's explore advanced authentication with JWT tokens in the next section.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

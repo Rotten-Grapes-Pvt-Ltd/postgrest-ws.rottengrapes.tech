@@ -1,0 +1,1311 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive workshop on PostgREST and PostGIS">
+      
+      
+        <meta name="author" content="Workshop Team">
+      
+      
+        <link rel="canonical" href="https://postgrest-ws.rottengrapes.tech/">
+      
+      
+      
+        <link rel="next" href="postgresql-intro/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>PostgREST Workshop</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#postgrest-workshop" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="PostgREST Workshop" class="md-header__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PostgREST Workshop
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="PostgREST Workshop" class="md-nav__button md-logo" aria-label="PostgREST Workshop" data-md-component="logo">
+      
+  <img src="assets/logo.png" alt="logo">
+
+    </a>
+    PostgREST Workshop
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop Environment Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workshop Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Initialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starting-the-workshop-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting the Workshop Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-access-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Access Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pgadmin-database-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pgAdmin Database Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workshop Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-1-introduction-to-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 1: Introduction to PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-2-introduction-to-postgis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 2: Introduction to PostGIS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-3-setting-up-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 3: Setting up PostgREST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-4-advanced-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 4: Advanced Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-5-using-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 5: Using Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-6-gis-with-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 6: GIS with PostgREST
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useful-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="postgresql-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="postgis-intro/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction to PostGIS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="postgrest-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setting up PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="postgrest-auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Advanced Authentication
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="postgrest-functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="postgrest-gis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIS with PostgREST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exercise-solutions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solution for Exercises
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop Environment Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workshop Environment Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Initialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starting-the-workshop-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting the Workshop Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-access-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Access Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pgadmin-database-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pgAdmin Database Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workshop Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#module-1-introduction-to-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 1: Introduction to PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-2-introduction-to-postgis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 2: Introduction to PostGIS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-3-setting-up-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 3: Setting up PostgREST
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-4-advanced-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 4: Advanced Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-5-using-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 5: Using Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-6-gis-with-postgrest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module 6: GIS with PostgREST
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#useful-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workshop-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workshop Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="postgrest-workshop">PostgREST Workshop</h1>
+<p>Welcome to the comprehensive PostgREST and PostGIS workshop! This hands-on workshop will teach you how to build powerful REST APIs directly from your PostgreSQL database using PostgREST, with advanced spatial capabilities through PostGIS.</p>
+<h2 id="what-youll-learn">What You'll Learn</h2>
+<ul>
+<li><strong>PostgreSQL Fundamentals</strong> - Core database concepts and SQL operations</li>
+<li><strong>PostGIS Spatial Extensions</strong> - Geographic data types and spatial operations</li>
+<li><strong>PostgREST API Generation</strong> - Automatic REST API creation from database schema</li>
+<li><strong>JWT Authentication</strong> - Secure API access with JSON Web Tokens</li>
+<li><strong>Custom Functions</strong> - Implementing business logic with PostgreSQL functions</li>
+<li><strong>Spatial APIs</strong> - Building location-aware applications with PostGIS and PostgREST</li>
+</ul>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Basic understanding of databases and SQL</li>
+<li>Familiarity with REST APIs</li>
+<li>Docker installed on your system</li>
+<li>Basic command line knowledge</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">If you don't have Prerequisites full filled</p>
+<p>Consider taking our course on <a href="https://krishnaglodha.com/courses/ultimate-postgis-course/">Ultimate PostGIS training</a> where we have covered everything from databases to deployments in 30 hours</p>
+</div>
+<h2 id="workshop-environment-setup">Workshop Environment Setup</h2>
+<p>This workshop includes a complete Docker Compose setup with all required services. The <code>docker-compose.yml</code> file in this repository includes:</p>
+<ul>
+<li><strong>PostgreSQL with PostGIS</strong> - Spatial database</li>
+<li><strong>PostgREST</strong> - Automatic REST API generation</li>
+<li><strong>pgAdmin</strong> - Database management interface</li>
+<li><strong>Swagger UI</strong> - API documentation</li>
+<li><strong>MkDocs</strong> - This documentation site</li>
+</ul>
+<h3 id="database-initialization">Database Initialization</h3>
+<p>The workshop includes pre-configured initialization scripts in the <code>init-scripts/</code> directory:</p>
+<ul>
+<li><code>01-init.sql</code> - Creates database roles, tables, and sample data</li>
+<li><code>02-functions.sql</code> - Creates PostgreSQL functions for the workshop</li>
+</ul>
+<p>These scripts automatically set up:
+- PostgreSQL extensions (PostGIS, pgcrypto, pgjwt)
+- PostgREST authentication roles and permissions
+- Basic authentication functions (login, register)
+- Sample hello_world table for testing</p>
+<p><strong>Note</strong>: Most tables (workshops, participants, locations, regions, routes) are created as part of the documentation examples and should be run manually during the workshop.</p>
+<h3 id="starting-the-workshop-environment">Starting the Workshop Environment</h3>
+<ol>
+<li>
+<p><strong>Clone this repository</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>postgrest-ws.rottengrapes.tech
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Start all services</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker-compose<span class="w"> </span>up<span class="w"> </span>--build
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Verify services are running</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all services</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>docker-compose<span class="w"> </span>ps
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test the API</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>http://localhost:3000/hello_world
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># View logs if needed</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>docker-compose<span class="w"> </span>logs<span class="w"> </span><span class="o">[</span>service-name<span class="o">]</span>
+</code></pre></div></p>
+</li>
+</ol>
+<h3 id="service-access-points">Service Access Points</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>URL</th>
+<th>Credentials</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Workshop Documentation</strong></td>
+<td>http://localhost:8000</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>PostgREST API</strong></td>
+<td>http://localhost:3000</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>pgAdmin</strong></td>
+<td>http://localhost:8080</td>
+<td>admin@workshop.com / admin123</td>
+</tr>
+<tr>
+<td><strong>Swagger UI</strong></td>
+<td>http://localhost:8081</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td>localhost:5432</td>
+<td>postgres / workshop123</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pgadmin-database-connection">pgAdmin Database Connection</h3>
+<p>When setting up pgAdmin:</p>
+<ol>
+<li>Open http://localhost:8080</li>
+<li>Login with admin@workshop.com / admin123</li>
+<li>Add new server with these settings:</li>
+<li><strong>Name</strong>: Workshop Database</li>
+<li><strong>Host</strong>: postgres</li>
+<li><strong>Port</strong>: 5432</li>
+<li><strong>Database</strong>: workshop</li>
+<li><strong>Username</strong>: postgres</li>
+<li><strong>Password</strong>: workshop123</li>
+</ol>
+<h2 id="workshop-structure">Workshop Structure</h2>
+<h3 id="module-1-introduction-to-postgresql">Module 1: <a href="postgresql-intro/">Introduction to PostgreSQL</a></h3>
+<p>Learn PostgreSQL fundamentals including data types, basic operations, and advanced features like JSON support and arrays.</p>
+<h3 id="module-2-introduction-to-postgis">Module 2: <a href="postgis-intro/">Introduction to PostGIS</a></h3>
+<p>Explore spatial data capabilities with PostGIS, including geometry types, spatial functions, and coordinate systems.</p>
+<h3 id="module-3-setting-up-postgrest">Module 3: <a href="postgrest-setup/">Setting up PostgREST</a></h3>
+<p>Get PostgREST running and learn how to create REST APIs automatically from your database schema.</p>
+<h3 id="module-4-advanced-authentication">Module 4: <a href="postgrest-auth/">Advanced Authentication</a></h3>
+<p>Implement secure authentication using JWT tokens and PostgreSQL's Row Level Security.</p>
+<h3 id="module-5-using-functions">Module 5: <a href="postgrest-functions/">Using Functions</a></h3>
+<p>Create custom PostgreSQL functions that become RPC endpoints in your PostgREST API.</p>
+<h3 id="module-6-gis-with-postgrest">Module 6: <a href="postgrest-gis/">GIS with PostgREST</a></h3>
+<p>Combine PostgREST with PostGIS to build powerful spatial APIs for location-aware applications.</p>
+<h2 id="quick-start-example">Quick Start Example</h2>
+<p>Once your environment is running, the database is pre-populated with sample data. Try these examples:</p>
+<ol>
+<li>
+<p><strong>Test the basic API</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test hello world endpoint</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>http://localhost:3000/hello_world
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Test hello world function</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://localhost:3000/rpc/hello_world<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;: &quot;Workshop&quot;}&#39;</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>After creating tables in the workshop</strong>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get workshops (after creating workshops table)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>http://localhost:3000/workshops
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Get locations (after creating locations table)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>http://localhost:3000/locations
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>View API documentation</strong>:</p>
+</li>
+<li>Open http://localhost:8081 for Swagger UI</li>
+<li>Open http://localhost:8000 for this workshop documentation</li>
+</ol>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues">Common Issues</h3>
+<p><strong>PostgREST not starting</strong>:
+- Check database connection in docker-compose logs
+- Verify database roles are created correctly</p>
+<p><strong>Permission denied errors</strong>:
+- Ensure proper GRANT statements are executed
+- Check that the correct role is being used</p>
+<p><strong>Spatial queries not working</strong>:
+- Verify PostGIS extension is installed
+- Check that spatial indexes are created</p>
+<h3 id="useful-commands">Useful Commands</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View logs for all services</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>docker-compose<span class="w"> </span>logs
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># View logs for specific service</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>docker-compose<span class="w"> </span>logs<span class="w"> </span>postgres
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>docker-compose<span class="w"> </span>logs<span class="w"> </span>postgrest
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>docker-compose<span class="w"> </span>logs<span class="w"> </span>mkdocs
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Restart services</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>docker-compose<span class="w"> </span>restart
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Stop all services</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>docker-compose<span class="w"> </span>down
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Reset everything (removes data)</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>docker-compose<span class="w"> </span>down<span class="w"> </span>-v
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Rebuild and restart</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>docker-compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
+</code></pre></div>
+<h2 id="resources">Resources</h2>
+<ul>
+<li><a href="https://postgrest.org/en/stable/">PostgREST Documentation</a></li>
+<li><a href="https://postgis.net/documentation/">PostGIS Documentation</a></li>
+<li><a href="https://www.postgresql.org/docs/">PostgreSQL Documentation</a></li>
+</ul>
+<h2 id="workshop-support">Workshop Support</h2>
+<p>If you encounter issues during the workshop:</p>
+<ol>
+<li>Check the troubleshooting section above</li>
+<li>Review the service logs using docker-compose logs</li>
+<li>Ensure all prerequisites are met</li>
+<li>Verify your Docker setup is working correctly</li>
+</ol>
+<p>Let's begin with <a href="postgresql-intro/">Introduction to PostgreSQL</a>!</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "content.code.copy"], "search": "assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.6.1/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
