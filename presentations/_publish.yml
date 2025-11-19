@@ -1,0 +1,4 @@
+- source: postgrest-workshop-presentation.qmd
+  quarto-pub:
+    - id: ae67558e-ce33-4ed5-a72c-ebafa579fe3a
+      url: https://krishnaglodha.quarto.pub/postgrest-with-postgis

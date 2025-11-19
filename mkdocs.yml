@@ -1,7 +1,7 @@
 site_name: PostgREST Workshop
 site_description: A comprehensive workshop on PostgREST and PostGIS
 site_author: Workshop Team
-site_url: "https://postgrest-ws.rottengrapes.tech"
+site_url: https://postgrest-ws.rottengrapes.tech
 repo_url: https://github.com/Rotten-Grapes-Pvt-Ltd/postgrest-ws.rottengrapes.tech
 
 theme:
